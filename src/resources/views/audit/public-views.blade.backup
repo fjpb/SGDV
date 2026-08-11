@@ -1,0 +1,92 @@
+@extends('layouts.app')
+
+@section('content')
+
+<div class="container-xl">
+
+    <div class="card">
+
+        <div class="card-header">
+            <h3 class="card-title">
+                Consultas QR Públicas
+            </h3>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-vcenter">
+
+                <thead>
+
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Patente</th>
+                        <th>Acción</th>
+                        <th>Documento</th>
+                        <th>IP</th>
+                        <th>Navegador</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                @forelse($views as $view)
+
+                    <tr>
+
+                        <td>
+                            {{ $view->created_at->format('d-m-Y H:i') }}
+                        </td>
+
+                        <td>
+                            {{ $view->vehicle->patente ?? '-' }}
+                        </td>
+
+                        <td>
+                            {{ $view->accion }}
+                        </td>
+
+                        <td>
+                            {{ $view->document->tipo_documento ?? '-' }}
+                        </td>
+
+                        <td>
+                            {{ $view->ip }}
+                        </td>
+
+                        <td style="max-width:350px">
+                            {{ $view->user_agent }}
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="6" class="text-center">
+                            No existen consultas registradas.
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="card-footer">
+
+            {{ $views->links() }}
+
+        </div>
+
+    </div>
+
+</div>
+
+@endsection

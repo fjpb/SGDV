@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\PublicVehicleView;
+use Illuminate\Support\Carbon;
+
+class AuditController extends Controller
+{
+
+    public function index()
+    {
+        return view('audit.index');
+    }
+
+
+    /**
+     * Consultas públicas realizadas mediante QR
+     */
+    public function publicViews()
+    {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Indicadores auditoría pública QR
+        |--------------------------------------------------------------------------
+        */
+
+        $totalConsultas = PublicVehicleView::count();
+
+
+        $consultasHoy = PublicVehicleView::whereDate(
+            'created_at',
+            Carbon::today()
+        )->count();
+
+
+        $pdfVisualizados = PublicVehicleView::where(
+            'accion',
+            'visualizacion_pdf'
+        )->count();
+
+
+        $vehiculosConsultados = PublicVehicleView::distinct(
+            'vehicle_id'
+        )->count(
+            'vehicle_id'
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Detalle consultas
+        |--------------------------------------------------------------------------
+        */
+
+        $views = PublicVehicleView::with([
+            'vehicle',
+            'document'
+        ])
+        ->latest()
+        ->paginate(20);
+
+
+
+        return view(
+            'audit.public-views',
+            compact(
+                'views',
+                'totalConsultas',
+                'consultasHoy',
+                'pdfVisualizados',
+                'vehiculosConsultados'
+            )
+        );
+
+    }
+
+}

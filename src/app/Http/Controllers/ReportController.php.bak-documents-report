@@ -1,0 +1,139 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Vehicle;
+use App\Models\PublicVehicleView;
+use App\Models\Document;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+
+class ReportController extends Controller
+{
+
+    public function index()
+    {
+        return view('reports.index');
+    }
+
+
+
+    /**
+     * Reporte PDF individual vehículo
+     */
+    public function vehiclePdf(Vehicle $vehicle)
+    {
+
+        $vehicle->load([
+            'documents'
+        ]);
+
+
+        $pdf = Pdf::loadView(
+            'reports.vehicle-pdf',
+            compact('vehicle')
+        );
+
+
+        return $pdf->stream(
+            'SGDV-'.$vehicle->patente.'.pdf'
+        );
+
+    }
+
+
+
+
+    /**
+     * Reporte ejecutivo SGDV
+     */
+    public function executivePdf()
+    {
+
+        $totalVehiculos = Vehicle::count();
+
+
+        $totalDocumentos = Document::count();
+
+
+        $documentos = Document::all();
+
+
+        $vigentes = $documentos
+            ->filter(fn($d) => $d->estadoActual() == 'Vigente')
+            ->count();
+
+
+        $porVencer = $documentos
+            ->filter(fn($d) => $d->estadoActual() == 'Por vencer')
+            ->count();
+
+
+        $vencidos = $documentos
+            ->filter(fn($d) => $d->estadoActual() == 'Vencido')
+            ->count();
+
+
+
+        $cumplimiento = $totalDocumentos > 0
+            ? round(($vigentes / $totalDocumentos) * 100)
+            : 0;
+
+
+
+        $consultasQR = PublicVehicleView::count();
+
+
+
+        $consultasHoy = PublicVehicleView::whereDate(
+            'created_at',
+            Carbon::today()
+        )
+        ->count();
+
+
+
+        $pdfPublicos = PublicVehicleView::where(
+            'accion',
+            'visualizacion_pdf'
+        )
+        ->count();
+
+
+
+        $vehiculosCriticos = Vehicle::with('documents')
+            ->get()
+            ->sortBy(function($vehicle){
+
+                return $vehicle->porcentajeDocumentacion();
+
+            })
+            ->take(5);
+
+
+
+        $pdf = Pdf::loadView(
+            'reports.executive-pdf',
+            compact(
+                'totalVehiculos',
+                'totalDocumentos',
+                'vigentes',
+                'porVencer',
+                'vencidos',
+                'cumplimiento',
+                'consultasQR',
+                'consultasHoy',
+                'pdfPublicos',
+                'vehiculosCriticos'
+            )
+        );
+
+
+        return $pdf->stream(
+            'SGDV-reporte-ejecutivo.pdf'
+        );
+
+    }
+
+
+}

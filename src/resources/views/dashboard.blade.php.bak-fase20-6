@@ -1,0 +1,311 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+<div class="page-header mb-4">
+
+<div>
+
+<h2 class="page-title">
+Dashboard
+</h2>
+
+<div class="text-secondary">
+Gestión documental vehicular
+</div>
+
+</div>
+
+</div>
+
+
+{{-- Estado documental --}}
+
+<div class="card mb-4">
+
+<div class="card-body">
+
+<h3 class="card-title mb-3">
+Estado Documental General
+</h3>
+
+
+<div class="row g-3">
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-success border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Vigentes
+</div>
+
+<div class="h1 text-success">
+{{ $vigentes }}
+</div>
+
+<div class="progress">
+
+<div class="progress-bar bg-success"
+style="width: {{ $cumplimiento }}%">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-warning border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Próximos a vencer
+</div>
+
+<div class="h1 text-warning">
+{{ $porVencer }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-danger border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Vencidos
+</div>
+
+<div class="h1 text-danger">
+{{ $vencidos }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-primary border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Vehículos
+</div>
+
+<div class="h1">
+{{ $totalVehiculos }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="row g-4">
+
+
+{{-- Alertas --}}
+
+<div class="col-lg-6">
+
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+Últimas Alertas
+</h3>
+
+</div>
+
+
+<div class="list-group list-group-flush">
+
+
+@forelse($proximosVencimientos as $document)
+
+
+<div class="list-group-item">
+
+
+<div class="d-flex justify-content-between">
+
+
+<div>
+
+<div class="fw-bold">
+
+{{ $document->tipo_documento }}
+
+</div>
+
+
+<div class="text-secondary">
+
+{{ $document->vehicle->patente }}
+
+</div>
+
+
+</div>
+
+
+
+<span class="badge bg-warning">
+
+{{ $document->diasRestantes() }} días
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+@empty
+
+<div class="p-3 text-secondary">
+
+No existen alertas.
+
+</div>
+
+@endforelse
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+{{-- Vehículos --}}
+
+<div class="col-lg-6">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h3 class="card-title">
+Vehículos recientes
+</h3>
+
+</div>
+
+
+
+<div class="list-group list-group-flush">
+
+
+@foreach($vehiculosRecientes as $vehicle)
+
+<div class="list-group-item">
+
+
+<div class="d-flex justify-content-between">
+
+
+<div>
+
+<div class="fw-bold">
+
+{{ $vehicle->marca }}
+{{ $vehicle->modelo }}
+
+</div>
+
+
+<div class="text-secondary">
+
+{{ $vehicle->patente }}
+
+</div>
+
+
+</div>
+
+
+<span class="badge bg-success">
+
+Activo
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+@endforeach
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</x-app-layout>

@@ -1,0 +1,232 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+    <div class="page-header d-print-none">
+
+        <div class="row align-items-center">
+
+            <div class="col">
+
+                <h2 class="page-title">
+                    Mis Vehículos
+                </h2>
+
+                <div class="text-secondary mt-1">
+                    Gestión de vehículos registrados en SGDV
+                </div>
+
+            </div>
+
+
+            <div class="col-auto ms-auto d-print-none">
+
+                <a href="{{ route('vehicles.create') }}"
+                   class="btn btn-primary">
+
+                    Nuevo vehículo
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-body">
+
+
+            @if($vehicles->count())
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-vcenter">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Patente</th>
+
+                                <th>Tipo</th>
+
+                                <th>Marca</th>
+
+                                <th>Modelo</th>
+
+                                <th>Año</th>
+
+                                <th>
+                                    Documentación
+                                </th>
+
+                                <th class="w-1"></th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        @foreach($vehicles as $vehicle)
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        <a href="{{ route('vehicles.show',$vehicle) }}">
+                                            {{ $vehicle->patente }}
+                                        </a>
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    {{ $vehicle->tipo }}
+                                </td>
+
+
+                                <td>
+                                    {{ $vehicle->marca }}
+                                </td>
+
+
+                                <td>
+                                    {{ $vehicle->modelo }}
+                                </td>
+
+
+                                <td>
+                                    {{ $vehicle->anio }}
+                                </td>
+
+
+                                <td>
+
+                                    @php
+                                        $cumplimiento = $vehicle->porcentajeDocumentacion();
+                                    @endphp
+
+
+                                    @if($cumplimiento >= 80)
+
+                                        <span class="badge bg-success">
+                                            {{ $cumplimiento }}%
+                                        </span>
+
+                                    @elseif($cumplimiento >= 50)
+
+                                        <span class="badge bg-warning">
+                                            {{ $cumplimiento }}%
+                                        </span>
+
+                                    @else
+
+                                        <span class="badge bg-danger">
+                                            {{ $cumplimiento }}%
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="btn-list">
+
+    <a href="{{ route('vehicles.edit',$vehicle) }}"
+       class="btn btn-sm">
+
+        Editar
+
+    </a>
+<a href="{{ route('vehicles.documents',$vehicle) }}"
+   class="btn btn-sm btn-outline-primary">
+
+Documentos
+
+</a>
+
+    <form method="POST"
+          action="{{ route('vehicles.destroy',$vehicle) }}">
+
+        @csrf
+
+        @method('DELETE')
+
+
+        <button class="btn btn-sm btn-outline-danger"
+                onclick="return confirm('¿Archivar vehículo?')">
+
+            Archivar
+
+        </button>
+
+
+    </form>
+
+</div>
+
+
+                                </td>
+
+
+                            </tr>
+
+                        @endforeach
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+            @else
+
+
+                <div class="empty">
+
+
+                    <div class="empty-icon">
+                        🚗
+                    </div>
+
+
+                    <p class="empty-title">
+                        No tienes vehículos registrados
+                    </p>
+
+
+                    <p class="empty-subtitle text-secondary">
+
+                        Registra tu primer vehículo para comenzar
+                        a gestionar tus documentos.
+
+                    </p>
+
+
+                </div>
+
+
+            @endif
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</x-app-layout>

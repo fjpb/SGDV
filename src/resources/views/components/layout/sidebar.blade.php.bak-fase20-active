@@ -1,0 +1,116 @@
+<aside class="navbar navbar-vertical navbar-expand-lg"
+style="background:#ffffff;border-right:1px solid #e9edf2;">
+
+<div class="container-fluid flex-column align-items-stretch">
+
+
+<div class="navbar-brand mb-4">
+
+<div class="d-flex align-items-center gap-2">
+
+<i class="fa-solid fa-car text-primary fs-2"></i>
+
+<span class="fw-bold fs-2">
+SGDV
+</span>
+
+</div>
+
+</div>
+
+
+
+<nav class="navbar-nav flex-column">
+
+
+<a class="nav-link active"
+href="{{ route('dashboard') }}">
+
+<i class="fa-solid fa-chart-pie me-2"></i>
+
+Dashboard
+
+</a>
+
+
+<a class="nav-link"
+href="{{ route('vehicles.index') }}">
+
+<i class="fa-solid fa-car me-2"></i>
+
+Vehículos
+
+</a>
+
+
+<a class="nav-link"
+href="{{ route('documents.index') }}">
+
+<i class="fa-solid fa-file-lines me-2"></i>
+
+Documentos
+
+</a>
+
+
+<a class="nav-link"
+href="{{ route('documents.trash') }}">
+
+<i class="fa-solid fa-box-archive me-2"></i>
+
+Archivados
+
+</a>
+
+
+<a class="nav-link"
+href="{{ route('calendar.index') }}">
+
+<i class="fa-solid fa-calendar-days me-2"></i>
+
+Calendario
+
+</a>
+
+
+<hr>
+
+
+<a class="nav-link">
+
+<i class="fa-solid fa-chart-line me-2"></i>
+
+Reportes
+
+</a>
+
+
+<a class="nav-link"
+href="{{ route('audit.index') }}">
+
+<i class="fa-solid fa-shield-halved me-2"></i>
+
+Auditoría
+
+</a>
+
+
+<hr>
+
+
+<a class="nav-link"
+href="{{ route('settings.index') }}">
+
+<i class="fa-solid fa-gear me-2"></i>
+
+Configuración
+
+</a>
+
+
+</nav>
+
+
+</div>
+
+</aside>

@@ -1,0 +1,264 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Vehicle;
+use App\Models\PublicVehicleView;
+use App\Models\Document;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+
+class ReportController extends Controller
+{
+
+    public function index()
+    {
+        return view('reports.index');
+    }
+
+
+
+    /**
+     * Reporte PDF individual vehículo
+     */
+    public function vehiclePdf(Vehicle $vehicle)
+    {
+
+        $vehicle->load([
+            'documents'
+        ]);
+
+
+        $pdf = Pdf::loadView(
+            'reports.vehicle-pdf',
+            compact('vehicle')
+        );
+
+
+        return $pdf->stream(
+            'SGDV-'.$vehicle->patente.'.pdf'
+        );
+
+    }
+
+
+
+
+    /**
+     * Reporte ejecutivo SGDV
+     */
+    public function executivePdf()
+    {
+
+        $totalVehiculos = Vehicle::count();
+
+
+        $totalDocumentos = Document::count();
+
+
+        $documentos = Document::all();
+
+
+        $vigentes = $documentos
+            ->filter(fn($d) => $d->estadoActual() == 'Vigente')
+            ->count();
+
+
+        $porVencer = $documentos
+            ->filter(fn($d) => $d->estadoActual() == 'Por vencer')
+            ->count();
+
+
+        $vencidos = $documentos
+            ->filter(fn($d) => $d->estadoActual() == 'Vencido')
+            ->count();
+
+
+
+        $cumplimiento = $totalDocumentos > 0
+            ? round(($vigentes / $totalDocumentos) * 100)
+            : 0;
+
+
+
+        $consultasQR = PublicVehicleView::count();
+
+
+
+        $consultasHoy = PublicVehicleView::whereDate(
+            'created_at',
+            Carbon::today()
+        )
+        ->count();
+
+
+
+        $pdfPublicos = PublicVehicleView::where(
+            'accion',
+            'visualizacion_pdf'
+        )
+        ->count();
+
+
+
+        $vehiculosCriticos = Vehicle::with('documents')
+            ->get()
+            ->sortBy(function($vehicle){
+
+                return $vehicle->porcentajeDocumentacion();
+
+            })
+            ->take(5);
+
+
+
+        $pdf = Pdf::loadView(
+            'reports.executive-pdf',
+            compact(
+                'totalVehiculos',
+                'totalDocumentos',
+                'vigentes',
+                'porVencer',
+                'vencidos',
+                'cumplimiento',
+                'consultasQR',
+                'consultasHoy',
+                'pdfPublicos',
+                'vehiculosCriticos'
+            )
+        );
+
+
+        return $pdf->stream(
+            'SGDV-reporte-ejecutivo.pdf'
+        );
+
+    }
+
+
+
+    /**
+     * Reporte documental general
+     */
+    public function documents(Request $request)
+    {
+
+        $query = Document::with('vehicle');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filtros
+        |--------------------------------------------------------------------------
+        */
+
+
+        if ($request->filled('tipo_documento')) {
+
+            $query->where(
+                'tipo_documento',
+                $request->tipo_documento
+            );
+
+        }
+
+
+
+        if ($request->filled('patente')) {
+
+            $query->whereHas(
+                'vehicle',
+                function($q) use ($request){
+
+                    $q->where(
+                        'patente',
+                        'like',
+                        '%'.$request->patente.'%'
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        $coleccion = $query->get();
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filtro estado calculado
+        |--------------------------------------------------------------------------
+        */
+
+
+        if ($request->filled('estado')) {
+
+            $coleccion = $coleccion->filter(
+                fn($d) =>
+                    $d->estadoActual() == $request->estado
+            );
+
+        }
+
+
+
+        $totalDocumentos = $coleccion->count();
+
+
+        $vigentes = $coleccion
+            ->filter(fn($d) => $d->estadoActual() == 'Vigente')
+            ->count();
+
+
+        $porVencer = $coleccion
+            ->filter(fn($d) => $d->estadoActual() == 'Por vencer')
+            ->count();
+
+
+        $vencidos = $coleccion
+            ->filter(fn($d) => $d->estadoActual() == 'Vencido')
+            ->count();
+
+
+
+        $coleccion = $coleccion
+            ->sortByDesc('created_at')
+            ->values();
+
+
+        $documents = new LengthAwarePaginator(
+            $coleccion->forPage(
+                Paginator::resolveCurrentPage(),
+                25
+            ),
+            $coleccion->count(),
+            25,
+            Paginator::resolveCurrentPage(),
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
+
+
+
+        return view(
+            'reports.documents',
+            compact(
+                'documents',
+                'totalDocumentos',
+                'vigentes',
+                'porVencer',
+                'vencidos'
+            )
+        );
+
+    }
+
+}

@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use App\Models\Document;
+use App\Models\Vehicle;
+
+use Illuminate\Support\Facades\Auth;
+
+
+class DashboardController extends Controller
+{
+
+    /**
+     * Dashboard principal SGDV
+     */
+    public function index()
+    {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Vehículos del usuario
+        |--------------------------------------------------------------------------
+        */
+
+        $totalVehiculos = Vehicle::where(
+            'user_id',
+            Auth::id()
+        )
+        ->count();
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Documentos del usuario
+        |--------------------------------------------------------------------------
+        */
+
+        $documents = Document::whereHas(
+
+            'vehicle',
+
+            function($query){
+
+                $query->where(
+                    'user_id',
+                    Auth::id()
+                );
+
+            }
+
+        )
+        ->get();
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Indicadores documentales
+        |--------------------------------------------------------------------------
+        */
+
+        $totalDocumentos = $documents->count();
+
+
+
+        $vigentes = $documents
+            ->filter(
+                fn($doc) =>
+                $doc->estadoActual() == 'Vigente'
+            )
+            ->count();
+
+
+
+        $porVencer = $documents
+            ->filter(
+                fn($doc) =>
+                $doc->estadoActual() == 'Por vencer'
+            )
+            ->count();
+
+
+
+        $vencidos = $documents
+            ->filter(
+                fn($doc) =>
+                $doc->estadoActual() == 'Vencido'
+            )
+            ->count();
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Próximos vencimientos
+        |--------------------------------------------------------------------------
+        */
+
+        $proximosVencimientos = $documents
+
+            ->filter(function($document){
+
+                return $document->fecha_vencimiento
+                    &&
+                    $document->diasRestantes() !== null
+                    &&
+                    $document->diasRestantes() <= 60;
+
+            })
+
+            ->sortBy('fecha_vencimiento')
+
+            ->take(5);
+
+
+
+        return view(
+
+            'dashboard',
+
+            compact(
+
+                'totalVehiculos',
+
+                'totalDocumentos',
+
+                'vigentes',
+
+                'porVencer',
+
+                'vencidos',
+
+                'proximosVencimientos'
+
+            )
+
+        );
+
+
+    }
+
+
+}

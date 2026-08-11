@@ -1,0 +1,260 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Document;
+use App\Models\Vehicle;
+use App\Models\PublicVehicleView;
+use App\Models\DocumentAuditLog;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+
+class DashboardController extends Controller
+{
+
+    public function index()
+    {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Datos usuario actual
+        |--------------------------------------------------------------------------
+        */
+
+        $totalVehiculos = Vehicle::where(
+            'user_id',
+            Auth::id()
+        )->count();
+
+
+
+        $documents = Document::whereHas(
+            'vehicle',
+            function($query){
+
+                $query->where(
+                    'user_id',
+                    Auth::id()
+                );
+
+            }
+        )->get();
+
+
+
+        $totalDocumentos = $documents->count();
+
+
+        $vigentes = $documents
+            ->filter(fn($doc) =>
+                $doc->estadoActual() == 'Vigente'
+            )
+            ->count();
+
+
+        $porVencer = $documents
+            ->filter(fn($doc) =>
+                $doc->estadoActual() == 'Por vencer'
+            )
+            ->count();
+
+
+        $vencidos = $documents
+            ->filter(fn($doc) =>
+                $doc->estadoActual() == 'Vencido'
+            )
+            ->count();
+
+
+
+        $proximosVencimientos = $documents
+            ->filter(function($document){
+
+                return $document->fecha_vencimiento
+                    &&
+                    $document->diasRestantes() !== null
+                    &&
+                    $document->diasRestantes() <= 60;
+
+            })
+            ->sortBy('fecha_vencimiento')
+            ->take(5);
+
+
+
+        $porcentajeVigentes = $totalDocumentos > 0
+            ? round(($vigentes / $totalDocumentos) * 100)
+            : 0;
+
+
+        $porcentajePorVencer = $totalDocumentos > 0
+            ? round(($porVencer / $totalDocumentos) * 100)
+            : 0;
+
+
+        $porcentajeVencidos = $totalDocumentos > 0
+            ? round(($vencidos / $totalDocumentos) * 100)
+            : 0;
+
+
+
+        $vehiculosRecientes = Vehicle::where(
+            'user_id',
+            Auth::id()
+        )
+        ->latest()
+        ->take(5)
+        ->get();
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dashboard Ejecutivo
+        |--------------------------------------------------------------------------
+        */
+
+        $consultasQR = 0;
+        $consultasHoy = 0;
+        $pdfPublicos = 0;
+        $topVehiculosQR = collect();
+        $topDocumentosQR = collect();
+        $graficoQR = collect();
+
+
+
+        if(
+            Auth::user()->role === 'admin'
+            ||
+            Auth::user()->role === 'supervisor'
+        ){
+
+
+            $consultasQR = PublicVehicleView::count();
+
+
+            $consultasHoy = PublicVehicleView::whereDate(
+                'created_at',
+                Carbon::today()
+            )->count();
+
+
+
+            $pdfPublicos = PublicVehicleView::where(
+                'accion',
+                'ver_pdf'
+            )->count();
+
+
+
+            $topVehiculosQR = PublicVehicleView::with(
+                'vehicle'
+            )
+            ->selectRaw(
+                'vehicle_id, count(*) total'
+            )
+            ->groupBy(
+                'vehicle_id'
+            )
+            ->orderByDesc(
+                'total'
+            )
+            ->take(10)
+            ->get();
+
+
+
+            $topDocumentosQR = PublicVehicleView::with(
+                'document'
+            )
+            ->whereNotNull(
+                'document_id'
+            )
+            ->selectRaw(
+                'document_id, count(*) total'
+            )
+            ->groupBy(
+                'document_id'
+            )
+            ->orderByDesc(
+                'total'
+            )
+            ->take(10)
+            ->get();
+
+
+
+            $graficoQR = PublicVehicleView::selectRaw(
+                'DATE(created_at) fecha, count(*) total'
+            )
+            ->where(
+                'created_at',
+                '>=',
+                Carbon::now()->subDays(30)
+            )
+            ->groupBy(
+                'fecha'
+            )
+            ->orderBy(
+                'fecha'
+            )
+            ->get();
+
+
+        }
+
+
+
+        $estadoDocumental = [
+
+            'vigentes' => $vigentes,
+
+            'porVencer' => $porVencer,
+
+            'vencidos' => $vencidos,
+
+        ];
+
+
+        $ultimosEventos = DocumentAuditLog::with([
+
+            'document.vehicle',
+
+            'user'
+
+        ])
+        ->latest()
+        ->take(10)
+        ->get();
+
+
+
+        return view(
+            'dashboard',
+            compact(
+                'totalVehiculos',
+                'totalDocumentos',
+                'vigentes',
+                'porVencer',
+                'vencidos',
+                'proximosVencimientos',
+                'vehiculosRecientes',
+                'porcentajeVigentes',
+                'porcentajePorVencer',
+                'porcentajeVencidos',
+                'consultasQR',
+                'consultasHoy',
+                'pdfPublicos',
+                'topVehiculosQR',
+                'topDocumentosQR',
+                'graficoQR',
+
+                'estadoDocumental',
+
+                'ultimosEventos'
+            )
+        );
+
+    }
+
+}
