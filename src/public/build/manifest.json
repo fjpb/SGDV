@@ -12,7 +12,7 @@
     "src": "node_modules/@tabler/icons-webfont/dist/fonts/tabler-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-DafoVdLo.css",
+    "file": "assets/app-yc68wHJA.css",
     "name": "app",
     "names": [
       "app.css"
@@ -35,7 +35,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DBHrpb8b.js",
+    "file": "assets/app-Cok8o60m.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
