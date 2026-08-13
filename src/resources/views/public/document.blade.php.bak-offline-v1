@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Documento SGDV</title>
+
+<style>
+
+body {
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f1f5f9;
+}
+
+.header {
+    background:white;
+    padding:20px;
+    text-align:center;
+}
+
+.status {
+    margin:15px;
+    padding:15px;
+    border-radius:10px;
+    background:#dcfce7;
+    color:#166534;
+    text-align:center;
+}
+
+.viewer {
+    width:100%;
+    height:80vh;
+    border:0;
+}
+
+</style>
+
+@vite(['resources/js/app.js'])
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>SGDV</h2>
+
+Sistema Gestión Documental Vehicular
+
+</div>
+
+
+<div class="status" id="status">
+
+Documento consultado desde servidor
+
+</div>
+
+
+<iframe
+class="viewer"
+src="{{ route('public.document.pdf',$document->uuid) }}">
+</iframe>
+
+
+<script>
+
+if (!navigator.onLine) {
+
+    document.getElementById('status').innerHTML =
+    '⚠ Documento disponible sin conexión';
+
+    document.getElementById('status').style.background =
+    '#fef3c7';
+
+    document.getElementById('status').style.color =
+    '#92400e';
+
+}
+
+</script>
+
+
+</body>
+
+</html>

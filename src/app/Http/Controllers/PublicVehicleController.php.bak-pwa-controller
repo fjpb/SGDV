@@ -23,6 +23,7 @@ class PublicVehicleController extends Controller
         ->firstOrFail();
 
 
+
         PublicVehicleView::create([
 
             'vehicle_id' => $vehicle->id,
@@ -38,6 +39,7 @@ class PublicVehicleController extends Controller
         ]);
 
 
+
         return view(
             'public.vehicle',
             compact('vehicle')
@@ -46,8 +48,10 @@ class PublicVehicleController extends Controller
     }
 
 
+
+
     /**
-     * Visor SGDV del documento
+     * Visualización PDF pública inline
      */
     public function document($uuid)
     {
@@ -59,11 +63,13 @@ class PublicVehicleController extends Controller
         ->firstOrFail();
 
 
+
         if (!\Storage::disk('public')->exists($document->archivo)) {
 
             abort(404);
 
         }
+
 
 
         PublicVehicleView::create([
@@ -80,33 +86,6 @@ class PublicVehicleController extends Controller
 
         ]);
 
-
-        return view(
-            'public.document',
-            compact('document')
-        );
-
-    }
-
-
-    /**
-     * Entrega física del PDF
-     */
-    public function pdf($uuid)
-    {
-
-        $document = Document::where(
-            'uuid',
-            $uuid
-        )
-        ->firstOrFail();
-
-
-        if (!\Storage::disk('public')->exists($document->archivo)) {
-
-            abort(404);
-
-        }
 
 
         return response()->file(

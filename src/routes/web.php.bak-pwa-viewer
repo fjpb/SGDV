@@ -313,11 +313,4 @@ Route::get(
 ->name('public.document');
 
 
-Route::get(
-    '/consulta/documento/{document}/pdf',
-    [PublicVehicleController::class,'pdf']
-)
-->name('public.document.pdf');
-
-
 require __DIR__.'/auth.php';
