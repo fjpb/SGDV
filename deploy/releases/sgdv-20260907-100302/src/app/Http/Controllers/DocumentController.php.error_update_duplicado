@@ -1,0 +1,552 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Document;
+use App\Models\Vehicle;
+use App\Http\Requests\DocumentRequest;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+
+class DocumentController extends Controller
+{
+
+    /**
+     * --------------------------------------------------------------------------
+     * Listado general de documentos del usuario autenticado.
+     * --------------------------------------------------------------------------
+     */
+    public function index()
+    {
+
+        $documents = Document::whereHas(
+            'vehicle',
+            function ($query) {
+
+                $query->where(
+                    'user_id',
+                    Auth::id()
+                );
+
+            }
+        )
+        ->latest()
+        ->get();
+
+        return view(
+            'documents.index',
+            compact('documents')
+        );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Formulario para crear un documento.
+     * --------------------------------------------------------------------------
+     */
+    public function create(Request $request)
+    {
+
+        $vehicles = Auth::user()
+            ->vehicles()
+            ->where('estado', 'activo')
+            ->get();
+
+
+        $documentTypes = \App\Models\DocumentType::where(
+            'activo',
+            true
+        )
+        ->orderBy('nombre')
+        ->get();
+
+
+
+        return view(
+            'documents.create',
+            compact(
+                'vehicles',
+                'documentTypes'
+            )
+        )->with(
+            'selectedVehicle',
+            $request->vehicle
+        );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Guarda un nuevo documento.
+     * --------------------------------------------------------------------------
+     */
+    public function store(
+        DocumentRequest $request
+    )
+    {
+
+        $vehicle = Auth::user()
+            ->vehicles()
+            ->findOrFail(
+                $request->vehicle_id
+            );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Carpeta física del documento
+        |--------------------------------------------------------------------------
+        */
+        $file = $request->file('archivo');
+
+        $folder =
+            'documents/vehicles/'
+            . $vehicle->uuid
+            . '/'
+            . strtolower(
+                str_replace(
+                    ' ',
+                    '_',
+                    $request->tipo_documento
+                )
+            );
+
+        $path = $file->store(
+            $folder,
+            'public'
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Registro en base de datos
+        |--------------------------------------------------------------------------
+        */
+        Document::create([
+
+            'vehicle_id'        => $vehicle->id,
+
+            'tipo_documento'    => $request->tipo_documento,
+
+            'nombre'            => $request->nombre,
+
+            'archivo'           => $path,
+
+            'fecha_emision'     => $request->fecha_emision,
+
+            'fecha_vencimiento' => $request->fecha_vencimiento,
+
+            'observacion'       => $request->observacion
+
+        ]);
+
+        return redirect()
+
+            ->route('documents.index')
+
+            ->with(
+                'success',
+                'Documento cargado correctamente.'
+            );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Actualiza un documento existente.
+     * --------------------------------------------------------------------------
+     */
+    public function update(
+        DocumentRequest $request,
+        Document $document
+    )
+    {
+
+        $this->authorizeDocument(
+            $document
+        );
+
+
+        $data = [
+
+            'tipo_documento' =>
+                $request->tipo_documento,
+
+            'nombre' =>
+                $request->nombre,
+
+            'fecha_emision' =>
+                $request->fecha_emision,
+
+            'fecha_vencimiento' =>
+                $request->fecha_vencimiento,
+
+            'observacion' =>
+                $request->observacion,
+
+        ];
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reemplazo opcional del archivo
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $request->hasFile('archivo')
+        ) {
+
+
+            $oldFile =
+                $document->archivo;
+
+
+
+            $folder =
+                'documents/vehicles/'
+                . $document->vehicle->uuid
+                . '/'
+                . strtolower(
+                    str_replace(
+                        ' ',
+                        '_',
+                        $request->tipo_documento
+                    )
+                );
+
+
+
+            $path =
+                $request->file('archivo')
+                ->store(
+                    $folder,
+                    'public'
+                );
+
+
+            $data['archivo'] =
+                $path;
+
+
+
+            Storage::disk('public')
+                ->delete(
+                    $oldFile
+                );
+
+        }
+
+
+
+        $document->update(
+            $data
+        );
+
+
+
+        return redirect()
+
+            ->route(
+                'documents.show',
+                $document
+            )
+
+            ->with(
+                'success',
+                'Documento actualizado correctamente.'
+            );
+
+    }
+
+
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Actualiza un documento existente.
+     * --------------------------------------------------------------------------
+     */
+    public function update(
+        DocumentRequest $request,
+        Document $document
+    )
+    {
+
+        $this->authorizeDocument(
+            $document
+        );
+
+
+        $data = [
+
+            'tipo_documento' =>
+                $request->tipo_documento,
+
+            'nombre' =>
+                $request->nombre,
+
+            'fecha_emision' =>
+                $request->fecha_emision,
+
+            'fecha_vencimiento' =>
+                $request->fecha_vencimiento,
+
+            'observacion' =>
+                $request->observacion,
+
+        ];
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reemplazo opcional del archivo
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $request->hasFile('archivo')
+        ) {
+
+
+            $oldFile =
+                $document->archivo;
+
+
+
+            $folder =
+                'documents/vehicles/'
+                . $document->vehicle->uuid
+                . '/'
+                . strtolower(
+                    str_replace(
+                        ' ',
+                        '_',
+                        $request->tipo_documento
+                    )
+                );
+
+
+
+            $path =
+                $request->file('archivo')
+                ->store(
+                    $folder,
+                    'public'
+                );
+
+
+            $data['archivo'] =
+                $path;
+
+
+
+            Storage::disk('public')
+                ->delete(
+                    $oldFile
+                );
+
+        }
+
+
+
+        $document->update(
+            $data
+        );
+
+
+
+        return redirect()
+
+            ->route(
+                'documents.show',
+                $document
+            )
+
+            ->with(
+                'success',
+                'Documento actualizado correctamente.'
+            );
+
+    }
+
+
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Formulario para editar un documento existente.
+     * --------------------------------------------------------------------------
+     */
+    public function edit(
+        Document $document
+    )
+    {
+
+        $this->authorizeDocument(
+            $document
+        );
+
+
+        $documentTypes = \App\Models\DocumentType::where(
+            'activo',
+            true
+        )
+        ->orderBy('nombre')
+        ->get();
+
+
+        return view(
+            'documents.edit',
+            compact(
+                'document',
+                'documentTypes'
+            )
+        );
+
+    }
+
+
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Muestra la ficha del documento.
+     * --------------------------------------------------------------------------
+     */
+    public function show(
+        Document $document
+    )
+    {
+
+        $this->authorizeDocument(
+            $document
+        );
+
+        return view(
+            'documents.show',
+            compact('document')
+        );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Descarga el archivo físico del documento.
+     * --------------------------------------------------------------------------
+     */
+    public function download(
+        Document $document
+    )
+    {
+
+        $this->authorizeDocument(
+            $document
+        );
+
+        return Storage::disk('public')
+            ->download(
+                $document->archivo
+            );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Elimina un documento.
+     * --------------------------------------------------------------------------
+     */
+    public function destroy(
+        Document $document
+    )
+    {
+
+        $this->authorizeDocument(
+            $document
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Elimina el archivo físico
+        |--------------------------------------------------------------------------
+        */
+        Storage::disk('public')
+            ->delete(
+                $document->archivo
+            );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Elimina el registro
+        |--------------------------------------------------------------------------
+        */
+        $document->delete();
+
+        return redirect()
+
+            ->route('documents.index')
+
+            ->with(
+                'success',
+                'Documento eliminado correctamente.'
+            );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Lista los documentos asociados a un vehículo.
+     * --------------------------------------------------------------------------
+     */
+    public function vehicleDocuments(
+        $vehicle
+    )
+    {
+
+        $documents = Document::where(
+            'vehicle_id',
+            $vehicle
+        )
+        ->get();
+
+        return view(
+            'documents.vehicle',
+            compact('documents')
+        );
+
+    }
+
+
+    /**
+     * --------------------------------------------------------------------------
+     * Verifica que el documento pertenezca al usuario autenticado.
+     * --------------------------------------------------------------------------
+     */
+    private function authorizeDocument(
+        Document $document
+    )
+    {
+
+        if (
+            $document
+                ->vehicle
+                ->user_id
+            !== Auth::id()
+        ) {
+
+            abort(403);
+
+        }
+
+    }
+
+}

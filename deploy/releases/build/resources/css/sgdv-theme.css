@@ -1,0 +1,801 @@
+/*
+|--------------------------------------------------------------------------
+| SGDV UX/UI Theme v1.0.1
+|--------------------------------------------------------------------------
+*/
+
+
+:root {
+
+    --sgdv-primary: #16a34a;
+    --sgdv-primary-dark: #15803d;
+
+    --sgdv-blue: #2563eb;
+
+    --sgdv-warning: #f59e0b;
+
+    --sgdv-danger: #ef4444;
+
+    --sgdv-dark: #0f172a;
+
+    --sgdv-bg: #f8fafc;
+
+    --sgdv-card-radius: 16px;
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| General
+|--------------------------------------------------------------------------
+*/
+
+
+body {
+
+    background: var(--sgdv-bg);
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Cards
+|--------------------------------------------------------------------------
+*/
+
+
+.card {
+
+    border-radius: var(--sgdv-card-radius);
+
+    box-shadow:
+    0 8px 24px rgba(15,23,42,.06);
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Sidebar
+|--------------------------------------------------------------------------
+*/
+
+
+.navbar-vertical {
+
+    background:
+    var(--sgdv-dark);
+
+}
+
+
+.navbar-vertical .navbar-brand {
+
+    color:white;
+
+}
+
+
+.navbar-vertical .nav-link {
+
+    color:#cbd5e1;
+
+    border-radius:12px;
+
+    margin-bottom:6px;
+
+}
+
+
+.navbar-vertical .nav-link:hover {
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+}
+
+
+.navbar-vertical .nav-link.active {
+
+    background:
+    var(--sgdv-primary);
+
+    color:white;
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Navbar superior
+|--------------------------------------------------------------------------
+*/
+
+
+.page-wrapper .navbar {
+
+    background:white;
+
+    box-shadow:
+    0 1px 8px rgba(15,23,42,.08);
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Estados documentales
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-status-ok {
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+
+.sgdv-status-warning {
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+
+.sgdv-status-danger {
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Brand spacing
+|--------------------------------------------------------------------------
+*/
+
+.sgdv-brand {
+
+    padding-left: 12px;
+    padding-right: 12px;
+
+}
+
+
+.sgdv-brand .ti {
+
+    margin-left: 4px;
+
+}
+
+
+.navbar-vertical .navbar-nav {
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+}
+
+
+.navbar-vertical .nav-link {
+
+    padding-left: 14px;
+
+}
+
+
+.sgdv-brand small {
+
+    display:block;
+
+    margin-left:42px;
+
+    font-size:11px;
+
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Brand Premium Spacing
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-brand {
+
+    padding-top: 20px;
+    padding-left: 18px;
+    padding-right: 18px;
+    margin-bottom: 35px !important;
+
+}
+
+
+.sgdv-brand .d-flex.align-items-center {
+
+    gap: 12px !important;
+
+}
+
+
+.sgdv-brand .ti {
+
+    font-size: 38px;
+
+}
+
+
+.sgdv-brand span {
+
+    font-size: 32px !important;
+
+    letter-spacing: .5px;
+
+}
+
+
+.sgdv-brand small {
+
+    margin-top: 8px;
+
+    margin-left: 50px;
+
+    line-height: 1.3;
+
+    max-width: 150px;
+
+    display:block;
+
+}
+
+
+.navbar-vertical .navbar-nav {
+
+    padding-left: 12px;
+
+    padding-right: 12px;
+
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Sidebar Compact Premium
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-brand {
+
+    padding-top: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+
+    margin-bottom: 18px !important;
+
+}
+
+
+.sgdv-brand .ti {
+
+    font-size: 28px;
+
+}
+
+
+.sgdv-brand span {
+
+    font-size: 24px !important;
+
+}
+
+
+.sgdv-brand small {
+
+    margin-left: 40px;
+
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    max-width:130px;
+
+}
+
+
+.navbar-vertical .navbar-nav {
+
+    padding-left: 8px;
+
+    padding-right: 8px;
+
+}
+
+
+.navbar-vertical .nav-link {
+
+    padding-top: 8px;
+
+    padding-bottom: 8px;
+
+    font-size:14px;
+
+}
+
+
+.navbar-vertical .nav-link .ti {
+
+    font-size:20px;
+
+}
+
+
+.navbar-vertical .text-secondary {
+
+    font-size:10px;
+
+    margin-top:12px !important;
+
+    margin-bottom:6px !important;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Fixed Sidebar Layout
+|--------------------------------------------------------------------------
+*/
+
+
+.navbar-vertical {
+
+    position: fixed;
+
+    top:0;
+
+    bottom:0;
+
+    left:0;
+
+    z-index:1030;
+
+    overflow-y:auto;
+
+}
+
+
+.page-wrapper {
+
+    margin-left: var(--tblr-navbar-vertical-width);
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Evitar movimientos del menú
+|--------------------------------------------------------------------------
+*/
+
+
+.navbar-vertical .navbar-nav {
+
+    flex:1;
+
+}
+
+
+.navbar-vertical::-webkit-scrollbar {
+
+    width:4px;
+
+}
+
+
+.navbar-vertical::-webkit-scrollbar-thumb {
+
+    background:rgba(255,255,255,.15);
+
+    border-radius:10px;
+
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Compact Branding
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-brand {
+
+    margin-bottom: 10px !important;
+
+    padding-top: 8px;
+
+}
+
+
+.sgdv-brand small {
+
+    display:none;
+
+}
+
+
+.sgdv-brand span {
+
+    font-size:22px !important;
+
+}
+
+
+.sgdv-brand .ti {
+
+    font-size:26px;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Navbar
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-navbar {
+
+    min-height:64px;
+
+}
+
+
+.sgdv-navbar .navbar-brand {
+
+    font-size:18px;
+
+}
+
+
+.sgdv-navbar small {
+
+    font-size:11px;
+
+}
+
+
+.sgdv-navbar .avatar {
+
+    border-radius:50%;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV KPI Cards
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-card {
+
+    border-radius:16px;
+
+    border:0;
+
+    box-shadow:0 4px 16px rgba(0,0,0,.05);
+
+}
+
+
+.sgdv-card .h1 {
+
+    font-size:2.2rem;
+
+    font-weight:700;
+
+}
+
+
+.sgdv-card:hover {
+
+    transform:translateY(-2px);
+
+    transition:.2s ease;
+
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| KPI Grid
+|--------------------------------------------------------------------------
+*/
+
+.sgdv-kpi-row {
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Fix Bootstrap Grid
+|--------------------------------------------------------------------------
+*/
+
+.sgdv-kpi-row {
+
+    display:block;
+
+}
+
+
+
+.page-body {
+
+    padding-top:20px;
+
+}
+
+
+.page-wrapper {
+
+    min-height:100vh;
+
+}
+
+
+
+
+/* FIX GRID BOOTSTRAP SGDV */
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+.col-12,
+.col-md-6,
+.col-xl-3,
+.col-lg-6 {
+    position: relative;
+}
+
+
+
+
+/* Bootstrap grid restore */
+
+.sgdv-kpi-row {
+    display:initial;
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Compliance Bar
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-card .progress {
+
+    height:12px;
+
+    border-radius:20px;
+
+}
+
+
+.sgdv-card .progress-bar {
+
+    border-radius:20px;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Operational Cards
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-card .card-header {
+
+    background:transparent;
+
+    border-bottom:1px solid rgba(0,0,0,.05);
+
+}
+
+
+.sgdv-card .list-group-item {
+
+    border-left:0;
+
+    border-right:0;
+
+}
+
+
+.sgdv-card .list-group-item:last-child {
+
+    border-bottom:0;
+
+}
+
+
+.badge {
+
+    padding:.45rem .65rem;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Enterprise Cards
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-card {
+
+    background:#ffffff;
+
+    border:1px solid rgba(15,23,42,.08);
+
+    border-radius:16px;
+
+    box-shadow:
+        0 4px 12px rgba(15,23,42,.06);
+
+    transition:
+        all .2s ease;
+
+}
+
+
+.sgdv-card:hover {
+
+    box-shadow:
+        0 8px 24px rgba(15,23,42,.10);
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.sgdv-card .card-body {
+
+    padding:1.25rem;
+
+}
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV QR Tables
+|--------------------------------------------------------------------------
+*/
+
+
+.sgdv-card .card-header {
+
+    background:transparent;
+
+}
+
+
+.sgdv-card .table {
+
+    margin-bottom:0;
+
+}
+
+
+.sgdv-card .table th {
+
+    font-size:.8rem;
+
+    text-transform:uppercase;
+
+    color:#64748b;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Executive Sections Alignment
+|--------------------------------------------------------------------------
+*/
+
+
+.card-body > .row.g-4 {
+
+    width:100%;
+
+}
+
+
+.card-body > .row.g-4 > [class*="col-"] {
+
+    padding-left:12px;
+
+    padding-right:12px;
+
+}
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SGDV Section Headers
+|--------------------------------------------------------------------------
+*/
+
+.sgdv-section-header {
+
+    margin-top: 2rem;
+
+}
+
+
+.sgdv-section-header .page-title {
+
+    font-size: 1.5rem;
+
+}
+
+
+
+

@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Laravel
+src/vendor/
+src/node_modules/
+src/storage/logs/*
+src/storage/framework/cache/*
+src/storage/framework/sessions/*
+src/storage/framework/views/*
+src/bootstrap/cache/*.php
+
+# Environment
+src/.env
+src/.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Backups
+*.tar.gz
+*.zip
+*.sql
+backups/
+
+# Logs
+*.log

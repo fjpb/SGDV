@@ -1,0 +1,23 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+<div class="card">
+
+<div class="card-body">
+
+<h2>
+Configuración SGDV
+</h2>
+
+<p class="text-secondary">
+Parámetros generales del sistema.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</x-app-layout>

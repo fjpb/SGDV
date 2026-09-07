@@ -1,0 +1,277 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AuditController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PublicVehicleController;
+use App\Http\Controllers\VehicleCardController;
+
+/*
+|--------------------------------------------------------------------------
+| Página principal
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/dashboard',
+    [DashboardController::class, 'index']
+)
+->middleware(['auth', 'verified'])
+->name('dashboard');
+
+/*
+|--------------------------------------------------------------------------
+| Rutas protegidas
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Perfil
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vehículos
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'vehicles',
+        VehicleController::class
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tarjeta QR vehículo
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/vehicles/{vehicle}/card',
+        [VehicleCardController::class,'show']
+    )
+    ->name('vehicles.card');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Generar QR público vehículo
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/vehicles/{vehicle}/qr',
+        [VehicleController::class,'qr']
+    )
+    ->name('vehicles.qr');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Documentos
+    |--------------------------------------------------------------------------
+    */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Documentos archivados
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/documents/trash',
+        [DocumentController::class, 'trash']
+    )
+    ->middleware('role:admin,supervisor')
+    ->name('documents.trash');
+
+
+    Route::post(
+        '/documents/trash/{document}/restore',
+        [DocumentController::class, 'restoreDeleted']
+    )
+    ->name('documents.trash.restore');
+
+
+
+    Route::resource(
+        'documents',
+        DocumentController::class
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Descargar documento
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/documents/{document}/download',
+        [DocumentController::class, 'download']
+    )->name('documents.download');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Restaurar versión histórica
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/documents/history/{history}/restore',
+        [DocumentController::class, 'restore']
+    )->name('documents.restore');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Documentos por vehículo
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/vehicles/{vehicle}/documents',
+        [DocumentController::class, 'vehicleDocuments']
+    )->name('vehicles.documents');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Calendario documental
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/calendar',
+        [CalendarController::class, 'index']
+    )->name('calendar.index');
+
+    Route::get(
+        '/calendar/events',
+        [CalendarController::class, 'events']
+    )->name('calendar.events');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Módulos administrativos
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/reports',
+        [ReportController::class,'index']
+    )
+    ->name('reports.index');
+
+
+    Route::get(
+        '/audit',
+        [AuditController::class,'index']
+    )
+    ->name('audit.index');
+
+
+    Route::get(
+        '/settings',
+        [SettingController::class,'index']
+    )
+    ->name('settings.index');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Módulos administrativos
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/reports',
+        [ReportController::class, 'index']
+    )
+    ->name('reports.index');
+
+
+    Route::get(
+        '/audit',
+        [AuditController::class, 'index']
+    )
+    ->name('audit.index');
+
+
+    Route::get(
+        '/settings',
+        [SettingController::class, 'index']
+    )
+    ->name('settings.index');
+
+
+
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Consulta pública vehículo mediante QR
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/public/vehicle/{uuid}',
+    [PublicVehicleController::class, 'show']
+)
+->name('public.vehicle.uuid');
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Consulta pública QR
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/consulta/{token}',
+    [PublicVehicleController::class,'show']
+)
+->name('public.vehicle');
+
+
+Route::get(
+    '/consulta/documento/{document}',
+    [PublicVehicleController::class,'document']
+)
+->name('public.document');
+
+
+require __DIR__.'/auth.php';

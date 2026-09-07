@@ -1,0 +1,135 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h2 class="card-title">
+Configuración SGDV
+</h2>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<p class="text-secondary mb-4">
+
+Parámetros generales del sistema.
+
+</p>
+
+
+
+<form method="POST" action="{{ route('settings.update') }}">
+
+@csrf
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Nombre institución
+</label>
+
+<input
+type="text"
+class="form-control"
+name="institucion_nombre"
+value="{{ $settings['institucion_nombre']->value ?? '' }}"
+>
+
+</div>
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Días alerta vencimiento
+</label>
+
+<input
+type="number"
+class="form-control"
+name="dias_alerta_vencimiento"
+value="{{ $settings['dias_alerta_vencimiento']->value ?? 30 }}"
+>
+
+<div class="form-hint">
+Cantidad de días antes de vencimiento para generar alertas.
+</div>
+
+</div>
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Correo contacto
+</label>
+
+<input
+type="email"
+class="form-control"
+name="email_contacto"
+value="{{ $settings['email_contacto']->value ?? '' }}"
+>
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Logo institucional
+</label>
+
+<input
+type="text"
+class="form-control"
+name="logo_institucional"
+value="{{ $settings['logo_institucional']->value ?? '' }}"
+>
+
+<div class="form-hint">
+Ruta del logo para reportes PDF.
+Ejemplo: images/logo.png
+</div>
+
+</div>
+
+
+<button class="btn btn-primary">
+
+Guardar configuración
+
+</button>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</x-app-layout>

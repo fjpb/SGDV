@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Vehicle;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class ReportController extends Controller
+{
+
+    public function index()
+    {
+
+        return view('reports.index');
+
+    }
+
+
+
+    /**
+     * Reporte PDF individual vehículo
+     */
+    public function vehiclePdf(Vehicle $vehicle)
+    {
+
+        $vehicle->load([
+            'documents'
+        ]);
+
+
+        $pdf = Pdf::loadView(
+            'reports.vehicle-pdf',
+            compact('vehicle')
+        );
+
+
+        return $pdf->stream(
+            'SGDV-'.$vehicle->patente.'.pdf'
+        );
+
+    }
+
+
+}

@@ -1,0 +1,645 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+
+<div class="page-header mb-4">
+
+<div>
+
+<h2 class="page-title">
+Dashboard SGDV
+</h2>
+
+<div class="text-secondary">
+Gestión documental vehicular
+</div>
+
+</div>
+
+</div>
+
+
+{{-- KPIs --}}
+
+<div class="row g-4 mb-4">
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-success border-4">
+
+<div class="card-body">
+
+
+<div class="text-secondary">
+Documentos vigentes
+</div>
+
+
+<div class="d-flex align-items-center justify-content-between">
+
+<div class="h1 mb-0 text-success">
+
+{{ $vigentes }}
+
+</div>
+
+
+<i class="fa-solid fa-circle-check text-success fs-1"></i>
+
+
+</div>
+
+
+<div class="small text-secondary mt-2">
+
+{{ $porcentajeVigentes }}% del total
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-warning border-4">
+
+<div class="card-body">
+
+
+<div class="text-secondary">
+
+Próximos a vencer
+
+</div>
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div class="h1 text-warning mb-0">
+
+{{ $porVencer }}
+
+</div>
+
+
+<i class="fa-solid fa-clock text-warning fs-1"></i>
+
+
+</div>
+
+
+<div class="small text-secondary">
+
+{{ $porcentajePorVencer }}% del total
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-danger border-4">
+
+<div class="card-body">
+
+
+<div class="text-secondary">
+
+Documentos vencidos
+
+</div>
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div class="h1 text-danger mb-0">
+
+{{ $vencidos }}
+
+</div>
+
+
+<i class="fa-solid fa-triangle-exclamation text-danger fs-1"></i>
+
+
+</div>
+
+
+<div class="small text-secondary">
+
+{{ $porcentajeVencidos }}% del total
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="card border-start border-primary border-4">
+
+
+<div class="card-body">
+
+
+<div class="text-secondary">
+
+Vehículos registrados
+
+</div>
+
+
+<div class="d-flex justify-content-between">
+
+
+<div class="h1 mb-0">
+
+{{ $totalVehiculos }}
+
+</div>
+
+
+<i class="fa-solid fa-car text-primary fs-1"></i>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<div class="row g-4">
+
+
+{{-- Alertas --}}
+
+<div class="col-lg-6">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Alertas documentales
+
+</h3>
+
+</div>
+
+
+<div class="list-group list-group-flush">
+
+
+@forelse($proximosVencimientos as $document)
+
+
+<div class="list-group-item">
+
+
+<div class="d-flex justify-content-between">
+
+
+<div>
+
+<div class="fw-bold">
+
+{{ $document->tipo_documento }}
+
+</div>
+
+
+<div class="text-secondary">
+
+{{ $document->vehicle->patente }}
+
+</div>
+
+
+</div>
+
+
+
+<span class="badge bg-warning">
+
+{{ $document->diasRestantes() }} días
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+@empty
+
+<div class="p-3 text-secondary">
+
+Sin alertas pendientes.
+
+</div>
+
+@endforelse
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+{{-- Vehículos recientes --}}
+
+<div class="col-lg-6">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Vehículos recientes
+
+</h3>
+
+</div>
+
+
+
+<div class="list-group list-group-flush">
+
+
+@foreach($vehiculosRecientes as $vehicle)
+
+
+<div class="list-group-item">
+
+
+<div class="d-flex justify-content-between">
+
+
+<div>
+
+<div class="fw-bold">
+
+{{ $vehicle->marca }}
+{{ $vehicle->modelo }}
+
+</div>
+
+
+<div class="text-secondary">
+
+{{ $vehicle->patente }}
+
+</div>
+
+
+</div>
+
+
+<span class="badge bg-success">
+
+Activo
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+@endforeach
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+@if(auth()->user()->role === 'admin' || auth()->user()->role === 'supervisor')
+
+<div class="row g-4 mt-4">
+
+<div class="col-12">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+Dashboard Ejecutivo
+</h3>
+
+</div>
+
+
+<div class="card-body">
+
+
+<div class="row g-4">
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-primary border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Consultas QR
+</div>
+
+<div class="h1 mb-0">
+{{ $consultasQR }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-success border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Consultas hoy
+</div>
+
+<div class="h1 mb-0 text-success">
+{{ $consultasHoy }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-warning border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+PDF públicos
+</div>
+
+<div class="h1 mb-0 text-warning">
+{{ $pdfPublicos }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card border-start border-info border-4">
+
+<div class="card-body">
+
+<div class="text-secondary">
+Estado sistema
+</div>
+
+<div class="h1 mb-0 text-info">
+OK
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-lg-6">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+Vehículos más consultados QR
+</h3>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table class="table card-table">
+
+<thead>
+
+<tr>
+
+<th>Patente</th>
+
+<th>Consultas</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+@forelse($topVehiculosQR as $item)
+
+<tr>
+
+<td>
+{{ $item->vehicle->patente ?? '-' }}
+</td>
+
+<td>
+{{ $item->total }}
+</td>
+
+</tr>
+
+@empty
+
+<tr>
+<td colspan="2">
+Sin datos
+</td>
+</tr>
+
+@endforelse
+
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+<div class="col-lg-6">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+Documentos más consultados
+</h3>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table class="table card-table">
+
+<thead>
+
+<tr>
+
+<th>Documento</th>
+
+<th>Consultas</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+@forelse($topDocumentosQR as $item)
+
+<tr>
+
+<td>
+{{ $item->document->tipo_documento ?? '-' }}
+</td>
+
+<td>
+{{ $item->total }}
+</td>
+
+</tr>
+
+@empty
+
+<tr>
+<td colspan="2">
+Sin datos
+</td>
+</tr>
+
+@endforelse
+
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+@endif
+
+
+</x-app-layout>

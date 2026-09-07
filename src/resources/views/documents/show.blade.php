@@ -79,7 +79,7 @@
 
                             <td>
 
-                                {{ $document->vehicle->patente }}
+                                {{ $document->vehicle?->patente ?? '-' }}
 
                             </td>
 

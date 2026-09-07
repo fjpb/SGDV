@@ -1,0 +1,187 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+
+
+
+@if($errors->any())
+
+<div class="alert alert-danger">
+
+<ul class="mb-0">
+
+@foreach($errors->all() as $error)
+
+<li>
+{{ $error }}
+</li>
+
+@endforeach
+
+</ul>
+
+</div>
+
+@endif
+
+
+
+<div class="card">
+
+<div class="card-header">
+
+<h2 class="card-title">
+Gestión de usuarios
+</h2>
+
+
+<a href="{{ route('users.create') }}" class="btn btn-primary">
+Nuevo usuario
+</a>
+
+
+</div>
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-vcenter">
+
+
+<thead>
+
+<tr>
+
+<th>
+Nombre
+</th>
+
+<th>
+Email
+</th>
+
+<th>
+Rol
+</th>
+
+<th>
+Estado
+</th>
+
+<th class="text-end">
+Acciones
+</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+@foreach($users as $user)
+
+<tr>
+
+
+<td>
+{{ $user->name }}
+</td>
+
+
+<td>
+{{ $user->email }}
+</td>
+
+
+<td>
+{{ ucfirst($user->role) }}
+</td>
+
+
+
+<td>
+
+@if($user->active)
+
+<span class="badge bg-success">
+Activo
+</span>
+
+@else
+
+<span class="badge bg-danger">
+Inactivo
+</span>
+
+@endif
+
+</td>
+
+
+
+<td class="text-end">
+
+
+<a 
+href="{{ route('users.edit',$user) }}"
+class="btn btn-sm btn-warning">
+
+Editar
+
+</a>
+
+
+
+<form 
+method="POST"
+action="{{ route('users.destroy',$user) }}"
+class="d-inline"
+onsubmit="return confirm('¿Está seguro de eliminar este usuario?');">
+
+@csrf
+@method('DELETE')
+
+
+<button 
+class="btn btn-sm btn-danger">
+
+Eliminar
+
+</button>
+
+
+</form>
+
+
+
+</td>
+
+
+</tr>
+
+
+@endforeach
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</x-app-layout>

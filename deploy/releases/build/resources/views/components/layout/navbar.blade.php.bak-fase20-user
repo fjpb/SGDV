@@ -1,0 +1,81 @@
+<header class="navbar navbar-expand-md d-print-none">
+
+<div class="container-xl">
+
+
+<div class="navbar-nav flex-row order-md-last">
+
+
+<div class="nav-item dropdown">
+
+
+<a href="#"
+class="nav-link d-flex align-items-center text-reset p-0">
+
+
+<span class="avatar avatar-sm">
+
+{{ strtoupper(substr(auth()->user()->name ?? 'U',0,2)) }}
+
+</span>
+
+
+<div class="d-none d-xl-block ps-2">
+
+<div>
+{{ auth()->user()->name ?? 'Usuario' }}
+</div>
+
+<div class="small text-secondary">
+
+{{ auth()->user()->role ?? 'Usuario' }}
+
+</div>
+
+</div>
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="collapse navbar-collapse">
+
+
+<div class="d-none d-md-flex">
+
+
+<div class="input-icon">
+
+<span class="input-icon-addon">
+
+<i class="fa-solid fa-search"></i>
+
+</span>
+
+
+<input 
+type="search"
+class="form-control"
+placeholder="Buscar...">
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</header>

@@ -1,0 +1,145 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\PublicVehicleView;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+
+class AuditController extends Controller
+{
+
+    public function index()
+    {
+        return view('audit.index');
+    }
+
+
+
+    /**
+     * Consultas públicas realizadas mediante QR
+     */
+    public function publicViews(Request $request)
+    {
+
+        $query = PublicVehicleView::with([
+            'vehicle',
+            'document'
+        ]);
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filtros
+        |--------------------------------------------------------------------------
+        */
+
+
+        if ($request->filled('desde')) {
+
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $request->desde
+            );
+
+        }
+
+
+        if ($request->filled('hasta')) {
+
+            $query->whereDate(
+                'created_at',
+                '<=',
+                $request->hasta
+            );
+
+        }
+
+
+        if ($request->filled('patente')) {
+
+            $query->whereHas(
+                'vehicle',
+                function($q) use ($request){
+
+                    $q->where(
+                        'patente',
+                        'like',
+                        '%'.$request->patente.'%'
+                    );
+
+                }
+            );
+
+        }
+
+
+        if ($request->filled('accion')) {
+
+            $query->where(
+                'accion',
+                $request->accion
+            );
+
+        }
+
+
+
+        $views = $query
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Indicadores globales filtrados
+        |--------------------------------------------------------------------------
+        */
+
+
+        $base = clone $query;
+
+
+        $totalConsultas = (clone $base)->count();
+
+
+        $consultasHoy = (clone $base)
+            ->whereDate(
+                'created_at',
+                Carbon::today()
+            )
+            ->count();
+
+
+        $pdfVisualizados = (clone $base)
+            ->where(
+                'accion',
+                'visualizacion_pdf'
+            )
+            ->count();
+
+
+        $vehiculosConsultados = (clone $base)
+            ->distinct('vehicle_id')
+            ->count('vehicle_id');
+
+
+
+        return view(
+            'audit.public-views',
+            compact(
+                'views',
+                'totalConsultas',
+                'consultasHoy',
+                'pdfVisualizados',
+                'vehiculosConsultados'
+            )
+        );
+
+    }
+
+}

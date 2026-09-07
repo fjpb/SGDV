@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Vehicle;
+
+class PublicVehicleController extends Controller
+{
+
+    /**
+     * Visor público mediante QR
+     */
+    public function show($uuid)
+    {
+
+        $vehicle = Vehicle::where(
+            'uuid',
+            $uuid
+        )
+        ->with('documents')
+        ->firstOrFail();
+
+
+        return view(
+            'public.vehicle',
+            compact('vehicle')
+        );
+
+    }
+
+}

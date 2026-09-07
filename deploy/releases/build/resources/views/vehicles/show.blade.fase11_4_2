@@ -1,0 +1,690 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+
+    <div class="page-header d-print-none">
+
+        <div class="row align-items-center">
+
+            <div class="col">
+
+                <h2 class="page-title">
+
+                    Ficha vehículo
+
+                </h2>
+
+
+                <div class="text-secondary">
+
+                    {{ $vehicle->marca }}
+                    {{ $vehicle->modelo }}
+
+                    ·
+
+                    {{ $vehicle->patente }}
+
+                </div>
+
+
+                <div class="text-secondary small mt-1">
+
+                    Gestión documental del vehículo
+
+                </div>
+
+            </div>
+
+
+            <div class="col-auto">
+
+                <div class="btn-list">
+
+
+                    <a href="{{ route('vehicles.edit',$vehicle) }}"
+                       class="btn btn-outline-primary">
+
+                        Editar
+
+                    </a>
+
+
+                    <a href="{{ route('documents.create') }}"
+                       class="btn btn-primary">
+
+                        Agregar documento
+
+                    </a>
+
+
+                    <a href="{{ route('vehicles.index') }}"
+                       class="btn btn-link">
+
+                        Volver
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row row-deck row-cards">
+
+
+        <div class="col-lg-12">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    @php
+                        $cumplimiento = $vehicle->porcentajeDocumentacion();
+                    @endphp
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+
+                        <div>
+
+                            <h3 class="card-title mb-1">
+
+                                Cumplimiento documental
+
+                            </h3>
+
+
+                            <div class="text-secondary">
+
+                                Estado general de documentos del vehículo
+
+                            </div>
+
+
+                            <div class="mt-2">
+
+                                @if($cumplimiento >= 80)
+
+                                    <span class="badge bg-success">
+                                        Documentación al día
+                                    </span>
+
+
+                                @elseif($cumplimiento >= 50)
+
+                                    <span class="badge bg-warning">
+                                        Revisión requerida
+                                    </span>
+
+
+                                @else
+
+                                    <span class="badge bg-danger">
+                                        Atención requerida
+                                    </span>
+
+
+                                @endif
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="h1 mb-0">
+
+                            {{ $cumplimiento }}%
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="progress mt-3">
+
+                        <div class="progress-bar 
+                            @if($cumplimiento >= 80)
+                                bg-success
+                            @elseif($cumplimiento >= 50)
+                                bg-warning
+                            @else
+                                bg-danger
+                            @endif"
+                            
+                            style="width: {{ $cumplimiento }}%">
+                            
+                        </div>
+
+                    </div>
+
+
+                    @php
+
+                        $documentos = $vehicle->documents;
+
+                        $totalDocs = $documentos->count();
+
+                        $vigentesDocs = $documentos
+                            ->filter(fn($doc) => $doc->estadoActual() == 'Vigente')
+                            ->count();
+
+                        $porVencerDocs = $documentos
+                            ->filter(fn($doc) => $doc->estadoActual() == 'Por vencer')
+                            ->count();
+
+                        $vencidosDocs = $documentos
+                            ->filter(fn($doc) => $doc->estadoActual() == 'Vencido')
+                            ->count();
+
+                    @endphp
+
+
+
+                    <div class="row mt-4">
+
+
+                        <div class="col-sm-6 col-lg-3">
+
+                            <div class="card card-sm">
+
+                                <div class="card-body">
+
+                                    <div class="text-secondary">
+                                        Total documentos
+                                    </div>
+
+                                    <div class="h2 mb-0">
+                                        {{ $totalDocs }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-sm-6 col-lg-3">
+
+                            <div class="card card-sm">
+
+                                <div class="card-body">
+
+                                    <div class="text-secondary">
+                                        Vigentes
+                                    </div>
+
+                                    <div class="h2 mb-0 text-success">
+                                        {{ $vigentesDocs }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-sm-6 col-lg-3">
+
+                            <div class="card card-sm">
+
+                                <div class="card-body">
+
+                                    <div class="text-secondary">
+                                        Por vencer
+                                    </div>
+
+                                    <div class="h2 mb-0 text-warning">
+                                        {{ $porVencerDocs }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-sm-6 col-lg-3">
+
+                            <div class="card card-sm">
+
+                                <div class="card-body">
+
+                                    <div class="text-secondary">
+                                        Vencidos
+                                    </div>
+
+                                    <div class="h2 mb-0 text-danger">
+                                        {{ $vencidosDocs }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-lg-12">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+                        Próximos vencimientos
+                    </h3>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    @php
+
+                        $proximos = $vehicle->documents
+                            ->filter(function($document){
+
+                                return $document->diasRestantes() !== null
+                                    && $document->diasRestantes() <= 60;
+
+                            })
+                            ->sortBy('fecha_vencimiento')
+                            ->take(5);
+
+                    @endphp
+
+
+
+                    @if($proximos->count())
+
+
+                        <div class="list-group list-group-flush">
+
+
+                            @foreach($proximos as $document)
+
+
+                                <div class="list-group-item">
+
+
+                                    <div class="row align-items-center">
+
+
+                                        <div class="col">
+
+                                            <a href="{{ route('documents.show',$document) }}">
+
+                                                {{ $document->nombre }}
+
+                                            </a>
+
+
+                                            <div class="text-secondary small">
+
+                                                {{ $document->fecha_vencimiento 
+                                                    ? \Carbon\Carbon::parse($document->fecha_vencimiento)->format('d-m-Y')
+                                                    : 'Sin fecha'
+                                                }}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="col-auto">
+
+                                            <span class="badge bg-warning">
+
+                                                {{ $document->diasRestantes() }} días
+
+                                            </span>
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            @endforeach
+
+
+                        </div>
+
+
+                    @else
+
+
+                        <div class="text-secondary">
+
+                            No existen vencimientos próximos.
+
+                        </div>
+
+
+                    @endif
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <div class="col-lg-6">
+
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+
+                        Datos vehículo
+
+                    </h3>
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <table class="table table-vcenter">
+
+
+                        <tr>
+
+                            <th>
+                                Patente
+                            </th>
+
+                            <td>
+                                {{ $vehicle->patente }}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th>
+                                Tipo
+                            </th>
+
+                            <td>
+                                {{ $vehicle->tipo }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Marca
+                            </th>
+
+                            <td>
+                                {{ $vehicle->marca }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Modelo
+                            </th>
+
+                            <td>
+                                {{ $vehicle->modelo }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Año
+                            </th>
+
+                            <td>
+                                {{ $vehicle->anio }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Color
+                            </th>
+
+                            <td>
+                                {{ $vehicle->color }}
+                            </td>
+
+                        </tr>
+
+
+
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <div class="col-lg-6">
+
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+
+                        Documentos asociados
+
+                    </h3>
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    @if($vehicle->documents->count())
+
+
+                        <table class="table table-vcenter">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Documento
+                                    </th>
+
+                                    <th>
+                                        Tipo
+                                    </th>
+
+                                    <th>
+                                        Vencimiento
+                                    </th>
+
+                                    <th>
+                                        Estado
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                            @foreach($vehicle->documents as $document)
+
+
+                                <tr>
+
+
+                                    <td>
+
+                                        <a href="{{ route('documents.show',$document->id) }}">
+
+                                            {{ $document->nombre }}
+
+                                        </a>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ $document->tipo_documento }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @if($document->fecha_vencimiento)
+
+                                            {{ 
+                                                \Carbon\Carbon::parse(
+                                                    $document->fecha_vencimiento
+                                                )->format('d-m-Y')
+                                            }}
+
+
+                                            <div class="text-secondary small">
+
+                                                {{ $document->diasRestantes() }} días
+
+                                            </div>
+
+                                        @else
+
+                                            Sin fecha
+
+                                        @endif
+
+                                    </td>
+
+
+
+                                    <td>
+
+                                        <span class="badge bg-{{ $document->colorEstado() }}">
+
+                                            {{ $document->estadoActual() }}
+
+                                        </span>
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+                            @endforeach
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    @else
+
+
+                        <div class="text-secondary">
+
+                            No existen documentos asociados.
+
+                        </div>
+
+
+                    @endif
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+</x-app-layout>

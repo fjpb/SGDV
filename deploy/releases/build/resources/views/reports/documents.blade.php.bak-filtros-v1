@@ -1,0 +1,254 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+
+    <div class="card mb-3">
+
+        <div class="card-body">
+
+            <h2 class="card-title">
+                Reporte documental
+            </h2>
+
+            <p class="text-secondary">
+                Estado general de documentación asociada a vehículos.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row row-deck row-cards mb-3">
+
+
+        <div class="col-md-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="text-secondary">
+                        Total documentos
+                    </div>
+
+                    <div class="h1 mb-0">
+                        {{ $totalDocumentos }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="text-secondary">
+                        Vigentes
+                    </div>
+
+                    <div class="h1 mb-0 text-success">
+                        {{ $vigentes }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="text-secondary">
+                        Por vencer
+                    </div>
+
+                    <div class="h1 mb-0 text-warning">
+                        {{ $porVencer }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="text-secondary">
+                        Vencidos
+                    </div>
+
+                    <div class="h1 mb-0 text-danger">
+                        {{ $vencidos }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="card">
+
+
+        <div class="card-header">
+
+            <h3 class="card-title">
+                Detalle documental
+            </h3>
+
+        </div>
+
+
+
+        <div class="table-responsive">
+
+
+            <table class="table table-vcenter">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Patente
+                        </th>
+
+                        <th>
+                            Vehículo
+                        </th>
+
+                        <th>
+                            Documento
+                        </th>
+
+                        <th>
+                            Vencimiento
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                @forelse($documents as $document)
+
+
+                    <tr>
+
+
+                        <td>
+                            {{ $document->vehicle->patente ?? '-' }}
+                        </td>
+
+
+                        <td>
+                            {{ $document->vehicle->marca ?? '' }}
+                            {{ $document->vehicle->modelo ?? '' }}
+                        </td>
+
+
+                        <td>
+                            {{ $document->tipo_documento }}
+                        </td>
+
+
+                        <td>
+
+                            {{ optional($document->fecha_vencimiento)->format('d-m-Y') ?? '-' }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge bg-{{ $document->colorEstado() }}">
+
+                                {{ $document->estadoActual() }}
+
+                            </span>
+
+                        </td>
+
+
+                    </tr>
+
+
+                @empty
+
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No existen documentos registrados.
+
+                        </td>
+
+                    </tr>
+
+
+                @endforelse
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <div class="card-footer">
+
+            {{ $documents->links() }}
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+</x-app-layout>

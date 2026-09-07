@@ -1,0 +1,248 @@
+<?php
+
+namespace App\Models;
+
+
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Setting;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+
+class Document extends Model
+{
+
+    use HasFactory, SoftDeletes;
+
+
+    protected $fillable = [
+
+        'vehicle_id',
+        'uuid',
+        'tipo_documento',
+        'nombre',
+        'archivo',
+        'fecha_emision',
+        'fecha_vencimiento',
+        'estado',
+        'observacion'
+
+    ];
+
+    /**
+     * --------------------------------------------------------------------------
+     * Conversión automática de atributos.
+     * --------------------------------------------------------------------------
+     */
+    protected $casts = [
+
+        'fecha_emision'     => 'date',
+
+        'fecha_vencimiento' => 'date',
+
+        'deleted_at'        => 'datetime',
+
+    ];
+
+    protected static function boot()
+    {
+
+        parent::boot();
+
+
+        static::creating(function ($document) {
+
+
+            if (!$document->uuid) {
+
+                $document->uuid = Str::uuid();
+
+            }
+
+
+        });
+
+
+    }
+
+
+
+    public function vehicle()
+    {
+
+        return $this->belongsTo(Vehicle::class);
+
+    }
+
+
+
+    /**
+     * Historial de cambios del documento.
+     */
+    public function histories()
+    {
+
+        return $this->hasMany(
+            DocumentHistory::class
+        );
+
+    }
+
+
+    /**
+     * Auditoría de acciones realizadas sobre el documento.
+     */
+    public function auditLogs()
+    {
+
+        return $this->hasMany(
+            DocumentAuditLog::class
+        );
+
+    }
+
+    /**
+ * Retorna días restantes para vencimiento
+ */
+
+    /**
+     * Auditoría de visualizaciones públicas mediante QR
+     */
+    public function publicVehicleViews()
+    {
+
+        return $this->hasMany(
+            PublicVehicleView::class
+        );
+
+    }
+
+
+
+    public function diasRestantes()
+{
+    if (!$this->fecha_vencimiento) {
+
+        return null;
+
+    }
+
+
+    return Carbon::today()
+        ->diffInDays(
+            Carbon::parse($this->fecha_vencimiento),
+            false
+        );
+}
+
+
+
+
+
+/**
+ * Indica si documento está vencido
+ */
+public function estaVencido()
+{
+    if (!$this->fecha_vencimiento) {
+
+        return false;
+
+    }
+
+
+    return Carbon::today()
+        ->greaterThan(
+            Carbon::parse($this->fecha_vencimiento)
+        );
+}
+
+
+
+
+
+/**
+ * Indica si vence dentro de 30 días
+ */
+public function estaPorVencer()
+{
+    if (!$this->fecha_vencimiento) {
+
+        return false;
+
+    }
+
+
+    $dias = $this->diasRestantes();
+
+
+    return $dias >= 0 && $dias <= (int) Setting::getValue(
+        'dias_alerta_vencimiento',
+        30
+    );
+}
+
+
+public function colorEstado()
+{
+
+    return match($this->estadoActual()) {
+
+
+        'Vigente'
+            => 'success',
+
+
+        'Por vencer'
+            => 'warning',
+
+
+        'Vencido'
+            => 'danger',
+
+
+        default
+            => 'secondary'
+
+    };
+
+}
+
+
+/**
+ * Estado calculado dinámicamente
+ */
+public function estadoActual()
+{
+
+    if (!$this->fecha_vencimiento) {
+
+        return 'Sin fecha';
+
+    }
+
+
+
+    if ($this->estaVencido()) {
+
+        return 'Vencido';
+
+    }
+
+
+
+    if ($this->estaPorVencer()) {
+
+        return 'Por vencer';
+
+    }
+
+
+
+    return 'Vigente';
+
+}
+
+}

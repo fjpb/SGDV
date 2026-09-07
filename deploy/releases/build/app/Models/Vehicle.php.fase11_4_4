@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
+
+class Vehicle extends Model
+{
+
+    use HasFactory, SoftDeletes;
+
+
+    protected $fillable = [
+        'user_id',
+	'uuid',
+        'patente',
+        'tipo',
+        'marca',
+        'modelo',
+        'anio',
+        'color',
+        'estado'
+    ];
+
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+
+        static::creating(function ($vehicle) {
+
+            if (!$vehicle->uuid) {
+                $vehicle->uuid = Str::uuid();
+            }
+
+        });
+
+
+
+        static::saving(function ($vehicle) {
+
+            if ($vehicle->patente) {
+
+                $vehicle->patente = strtoupper(
+                    preg_replace(
+                        '/[^A-Za-z0-9]/',
+                        '',
+                        $vehicle->patente
+                    )
+                );
+
+            }
+
+        });
+
+    }
+
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function documents()
+    {
+    return $this->hasMany(Document::class);
+    }
+
+
+    /**
+     * Porcentaje de documentación vigente del vehículo
+     */
+    public function porcentajeDocumentacion()
+    {
+
+        $total = $this->documents()->count();
+
+
+        if($total == 0){
+
+            return 0;
+
+        }
+
+
+        $vigentes = $this->documents()
+            ->get()
+            ->filter(function($document){
+
+                return $document->estadoActual() == 'Vigente';
+
+            })
+            ->count();
+
+
+        return round(
+            ($vigentes / $total) * 100
+        );
+
+    }
+
+
+}

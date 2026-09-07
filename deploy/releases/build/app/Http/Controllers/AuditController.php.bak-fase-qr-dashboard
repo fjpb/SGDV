@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\PublicVehicleView;
+
+class AuditController extends Controller
+{
+
+    public function index()
+    {
+        return view('audit.index');
+    }
+
+
+    /**
+     * Consultas públicas realizadas mediante QR
+     */
+    public function publicViews()
+    {
+
+        $views = PublicVehicleView::with([
+            'vehicle',
+            'document'
+        ])
+        ->latest()
+        ->paginate(20);
+
+        return view(
+            'audit.public-views',
+            compact('views')
+        );
+
+    }
+
+}

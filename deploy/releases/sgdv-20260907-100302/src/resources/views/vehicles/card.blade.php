@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Ficha Vehicular SGDV
+</title>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Inter,Arial,sans-serif;
+}
+
+
+body{
+
+margin:0;
+
+background:#f1f5f9;
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:30px;
+
+}
+
+
+
+.sgdv-card{
+
+width:430px;
+
+background:white;
+
+border-radius:28px;
+
+padding:32px;
+
+box-shadow:0 15px 40px rgba(15,23,42,.12);
+
+}
+
+
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+}
+
+
+
+.brand{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+
+
+.brand-icon{
+
+width:45px;
+
+height:45px;
+
+background:#15803d;
+
+color:white;
+
+border-radius:14px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:22px;
+
+}
+
+
+
+.brand h1{
+
+margin:0;
+
+font-size:22px;
+
+color:#0f172a;
+
+}
+
+
+
+.brand small{
+
+color:#64748b;
+
+}
+
+
+
+.qr{
+
+background:#dcfce7;
+
+color:#15803d;
+
+padding:8px 15px;
+
+border-radius:20px;
+
+font-weight:600;
+
+}
+
+
+
+.vehicle{
+
+margin-top:25px;
+
+background:#f8fafc;
+
+border-radius:22px;
+
+padding:22px;
+
+}
+
+
+
+.vehicle h2{
+
+margin:0;
+
+font-size:25px;
+
+color:#0f172a;
+
+}
+
+
+
+.patente{
+
+margin-top:10px;
+
+display:inline-block;
+
+background:#111827;
+
+color:white;
+
+padding:8px 20px;
+
+border-radius:10px;
+
+font-size:25px;
+
+letter-spacing:4px;
+
+font-weight:700;
+
+}
+
+
+
+.data{
+
+margin-top:15px;
+
+display:flex;
+
+justify-content:space-between;
+
+color:#64748b;
+
+}
+
+
+
+.status{
+
+margin-top:12px;
+
+padding:10px;
+
+background:#f0fdf4;
+
+border-radius:14px;
+
+text-align:center;
+
+}
+
+
+
+.percent{
+
+font-size:20px;
+
+font-weight:800;
+
+color:#166534;
+
+}
+
+
+
+.docs{
+
+margin-top:14px;
+
+}
+
+
+
+.doc{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:12px;
+
+background:#f8fafc;
+
+border-radius:14px;
+
+margin-bottom:8px;
+
+}
+
+
+
+.ok{
+
+color:#15803d;
+
+}
+
+
+
+.warning{
+
+color:#b45309;
+
+}
+
+
+
+.bad{
+
+color:#b91c1c;
+
+}
+
+
+
+.qr-box{
+
+text-align:center;
+
+margin-top:25px;
+
+}
+
+
+
+.footer{
+
+text-align:center;
+
+margin-top:20px;
+
+font-size:13px;
+
+color:#94a3b8;
+
+}
+
+
+
+
+.logo-institucional{
+
+font-weight:800;
+
+font-size:20px;
+
+color:#15803d;
+
+}
+
+
+.print{
+
+text-align:center;
+
+margin-top:20px;
+
+}
+
+
+.print button{
+
+background:#15803d;
+
+color:white;
+
+border:0;
+
+padding:10px 22px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+
+@media print{
+
+
+body{
+
+background:white;
+
+padding:0;
+
+}
+
+
+.print{
+
+display:none;
+
+}
+
+
+.sgdv-card{
+
+box-shadow:none;
+
+}
+
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="sgdv-card">
+
+
+<div class="header">
+
+
+<div class="brand">
+
+<div class="brand-icon">
+
+🚗
+
+</div>
+
+
+<div>
+
+<h1 class="logo-institucional">SGDV</h1>
+
+<small>
+Sistema Gestión Documental Vehicular
+</small>
+
+</div>
+
+</div>
+
+
+<div class="qr">
+
+QR
+
+</div>
+
+
+</div>
+
+
+
+<div class="vehicle">
+
+
+<h2>
+
+{{ $vehicle->marca }}
+
+{{ $vehicle->modelo }}
+
+</h2>
+
+
+<div class="patente">
+
+{{ $vehicle->patente }}
+
+</div>
+
+
+<div class="data">
+
+<span>
+Año {{ $vehicle->anio }}
+</span>
+
+
+<span>
+{{ $vehicle->color }}
+</span>
+
+</div>
+
+
+</div>
+
+
+
+@php
+
+$porcentaje=$vehicle->porcentajeDocumentacion();
+
+@endphp
+
+
+
+<div class="status">
+
+
+<div class="percent">
+
+{{ $cumplimiento }}%
+
+</div>
+
+
+<div style="
+font-weight:700;
+margin-top:4px;
+">
+
+{{ $estadoGeneral }}
+
+</div>
+
+
+<div style="
+font-size:13px;
+margin-top:6px;
+color:#64748b;
+">
+
+{{ $vigentes }}
+de
+{{ $totalDocumentos }}
+documentos vigentes
+
+</div>
+
+
+</div>
+
+
+<div style="text-align:center;margin-top:15px;">
+
+<a href="{{ route('public.vehicle.uuid',$vehicle->uuid) }}"
+style="
+display:inline-block;
+background:#15803d;
+color:white;
+padding:10px 18px;
+border-radius:12px;
+text-decoration:none;
+font-weight:600;
+margin-right:8px;
+">
+
+<i class="fa-solid fa-qrcode"></i>
+
+Consulta QR pública
+
+</a>
+
+
+<button onclick="window.print()"
+style="
+background:#2563eb;
+color:white;
+border:0;
+padding:10px 18px;
+border-radius:12px;
+font-weight:600;
+cursor:pointer;
+">
+
+<i class="fa-solid fa-print"></i>
+
+Imprimir
+
+</button>
+
+</div>
+
+
+
+<div class="docs">
+
+
+@foreach($vehicle->documents as $document)
+
+
+<div class="doc">
+
+
+<span>
+
+{{ $document->tipo_documento }}
+
+</span>
+
+
+<span>
+
+@if($document->estadoActual()=="Vigente")
+
+<span class="ok">
+✔ Vigente
+</span>
+
+@elseif($document->estadoActual()=="Por vencer")
+
+<span class="warning">
+⚠ Por vencer
+</span>
+
+@else
+
+<span class="bad">
+✖ Vencido
+</span>
+
+@endif
+
+
+</span>
+
+
+</div>
+
+
+@endforeach
+
+
+</div>
+
+
+
+
+<div class="qr-box">
+
+<div style="
+background:white;
+padding:10px;
+display:inline-block;
+border-radius:16px;
+">
+
+{!! $qr !!}
+
+</div>
+
+<div style="
+margin-top:10px;
+font-size:13px;
+color:#64748b;
+">
+Escanee para consulta pública
+</div>
+
+</div>
+
+
+
+
+
+<div style="margin-top:5px;">
+Generado: {{ $fechaGeneracion }}
+</div>
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>

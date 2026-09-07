@@ -1,0 +1,185 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
+
+class Vehicle extends Model
+{
+
+    use HasFactory, SoftDeletes;
+
+
+    protected $fillable = [
+        'user_id',
+	'uuid',
+        'patente',
+        'tipo',
+        'marca',
+        'modelo',
+        'anio',
+        'color',
+        'estado'
+    ];
+
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+
+        static::creating(function ($vehicle) {
+
+            if (!$vehicle->uuid) {
+                $vehicle->uuid = Str::uuid();
+            }
+
+        });
+
+
+
+        static::saving(function ($vehicle) {
+
+            if ($vehicle->patente) {
+
+                $vehicle->patente = strtoupper(
+                    preg_replace(
+                        '/[^A-Za-z0-9]/',
+                        '',
+                        $vehicle->patente
+                    )
+                );
+
+            }
+
+        });
+
+    }
+
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
+
+    /**
+     * Auditoría de consultas públicas mediante QR
+     */
+    public function publicVehicleViews()
+    {
+        return $this->hasMany(PublicVehicleView::class);
+    }
+
+
+    /**
+     * Porcentaje de documentación vigente del vehículo
+     */
+    public function porcentajeDocumentacion()
+    {
+
+        $total = $this->documents()->count();
+
+
+        if($total == 0){
+
+            return 0;
+
+        }
+
+
+        $vigentes = $this->documents()
+            ->get()
+            ->filter(function($document){
+
+                return $document->estadoActual() == 'Vigente';
+
+            })
+            ->count();
+
+
+        return round(
+            ($vigentes / $total) * 100
+        );
+
+    }
+
+
+    /**
+     * Cantidad total de documentos asociados
+     */
+    public function totalDocumentos()
+    {
+        return $this->documents()->count();
+    }
+
+
+    /**
+     * Documentos vigentes
+     */
+    public function documentosVigentes()
+    {
+        return $this->documents()
+            ->get()
+            ->filter(function($document){
+
+                return $document->estadoActual() == 'Vigente';
+
+            })
+            ->count();
+    }
+
+
+    /**
+     * Documentos próximos a vencer
+     */
+    public function documentosPorVencer()
+    {
+        return $this->documents()
+            ->get()
+            ->filter(function($document){
+
+                return $document->estadoActual() == 'Por vencer';
+
+            })
+            ->count();
+    }
+
+
+    /**
+     * Documentos vencidos
+     */
+    public function documentosVencidos()
+    {
+        return $this->documents()
+            ->get()
+            ->filter(function($document){
+
+                return $document->estadoActual() == 'Vencido';
+
+            })
+            ->count();
+    }
+
+
+
+    /**
+     * Consultas realizadas mediante QR público
+     */
+    public function qrConsultations()
+    {
+        return $this->hasMany(QrConsultation::class);
+    }
+
+
+}

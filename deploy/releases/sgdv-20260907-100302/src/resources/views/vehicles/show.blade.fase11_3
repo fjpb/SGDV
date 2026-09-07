@@ -1,0 +1,421 @@
+<x-app-layout>
+
+<div class="container-xl">
+
+
+    <div class="page-header d-print-none">
+
+        <div class="row align-items-center">
+
+            <div class="col">
+
+                <h2 class="page-title">
+                    Ficha vehículo
+                </h2>
+
+                <div class="text-secondary">
+                    Información general del vehículo
+                </div>
+
+            </div>
+
+
+            <div class="col-auto">
+
+                <a href="{{ route('vehicles.index') }}"
+                   class="btn btn-link">
+
+                    Volver
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row row-deck row-cards">
+
+
+        <div class="col-lg-12">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    @php
+                        $cumplimiento = $vehicle->porcentajeDocumentacion();
+                    @endphp
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+
+                        <div>
+
+                            <h3 class="card-title mb-1">
+
+                                Cumplimiento documental
+
+                            </h3>
+
+
+                            <div class="text-secondary">
+
+                                Estado general de documentos del vehículo
+
+                            </div>
+
+
+                            <div class="mt-2">
+
+                                @if($cumplimiento >= 80)
+
+                                    <span class="badge bg-success">
+                                        Documentación al día
+                                    </span>
+
+
+                                @elseif($cumplimiento >= 50)
+
+                                    <span class="badge bg-warning">
+                                        Revisión requerida
+                                    </span>
+
+
+                                @else
+
+                                    <span class="badge bg-danger">
+                                        Atención requerida
+                                    </span>
+
+
+                                @endif
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="h1 mb-0">
+
+                            {{ $cumplimiento }}%
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="progress mt-3">
+
+                        <div class="progress-bar 
+                            @if($cumplimiento >= 80)
+                                bg-success
+                            @elseif($cumplimiento >= 50)
+                                bg-warning
+                            @else
+                                bg-danger
+                            @endif"
+                            
+                            style="width: {{ $cumplimiento }}%">
+                            
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-lg-6">
+
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+
+                        Datos vehículo
+
+                    </h3>
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <table class="table table-vcenter">
+
+
+                        <tr>
+
+                            <th>
+                                Patente
+                            </th>
+
+                            <td>
+                                {{ $vehicle->patente }}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th>
+                                Tipo
+                            </th>
+
+                            <td>
+                                {{ $vehicle->tipo }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Marca
+                            </th>
+
+                            <td>
+                                {{ $vehicle->marca }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Modelo
+                            </th>
+
+                            <td>
+                                {{ $vehicle->modelo }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Año
+                            </th>
+
+                            <td>
+                                {{ $vehicle->anio }}
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <th>
+                                Color
+                            </th>
+
+                            <td>
+                                {{ $vehicle->color }}
+                            </td>
+
+                        </tr>
+
+
+
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <div class="col-lg-6">
+
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+
+                        Documentos asociados
+
+                    </h3>
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    @if($vehicle->documents->count())
+
+
+                        <table class="table table-vcenter">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Documento
+                                    </th>
+
+                                    <th>
+                                        Tipo
+                                    </th>
+
+                                    <th>
+                                        Vencimiento
+                                    </th>
+
+                                    <th>
+                                        Estado
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                            @foreach($vehicle->documents as $document)
+
+
+                                <tr>
+
+
+                                    <td>
+
+                                        <a href="{{ route('documents.show',$document->id) }}">
+
+                                            {{ $document->nombre }}
+
+                                        </a>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ $document->tipo_documento }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @if($document->fecha_vencimiento)
+
+                                            {{ 
+                                                \Carbon\Carbon::parse(
+                                                    $document->fecha_vencimiento
+                                                )->format('d-m-Y')
+                                            }}
+
+
+                                            <div class="text-secondary small">
+
+                                                {{ $document->diasRestantes() }} días
+
+                                            </div>
+
+                                        @else
+
+                                            Sin fecha
+
+                                        @endif
+
+                                    </td>
+
+
+
+                                    <td>
+
+                                        <span class="badge bg-{{ $document->colorEstado() }}">
+
+                                            {{ $document->estadoActual() }}
+
+                                        </span>
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+                            @endforeach
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    @else
+
+
+                        <div class="text-secondary">
+
+                            No existen documentos asociados.
+
+                        </div>
+
+
+                    @endif
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+</x-app-layout>

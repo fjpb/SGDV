@@ -275,7 +275,7 @@ class DocumentService
             isset($oldFile)
         ) {
 
-            Storage::disk('local')
+            Storage::disk('public')
                 ->delete(
                     $oldFile
                 );

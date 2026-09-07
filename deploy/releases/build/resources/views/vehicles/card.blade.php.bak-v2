@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Tarjeta SGDV
+</title>
+
+
+<style>
+
+body {
+
+    background:#f1f5f9;
+    font-family:Arial, sans-serif;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:100vh;
+
+}
+
+
+.card {
+
+    width:350px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    text-align:center;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+}
+
+
+.logo {
+
+    font-size:28px;
+    font-weight:bold;
+    color:#2563eb;
+
+}
+
+
+.subtitle {
+
+    color:#64748b;
+    font-size:14px;
+
+    margin-bottom:20px;
+
+}
+
+
+.vehicle {
+
+    background:#f8fafc;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    margin-bottom:20px;
+
+}
+
+
+.vehicle h2 {
+
+    margin:0;
+
+    color:#0f172a;
+
+}
+
+
+.patente {
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    margin-top:8px;
+
+}
+
+
+.qr {
+
+    margin:20px 0;
+
+}
+
+
+.status {
+
+    padding:10px;
+
+    border-radius:12px;
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    font-weight:bold;
+
+}
+
+
+.url {
+
+    margin-top:15px;
+
+    font-size:11px;
+
+    color:#64748b;
+
+    word-break:break-all;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+<div class="logo">
+
+SGDV
+
+</div>
+
+
+<div class="subtitle">
+
+Sistema de Gestión Documental Vehicular
+
+</div>
+
+
+
+<div class="vehicle">
+
+
+<h2>
+
+{{ $vehicle->marca }}
+
+{{ $vehicle->modelo }}
+
+</h2>
+
+
+<div class="patente">
+
+{{ $vehicle->patente }}
+
+</div>
+
+
+<div>
+
+Año {{ $vehicle->anio }}
+
+</div>
+
+
+</div>
+
+
+
+<div class="qr">
+
+{!! $qr !!}
+
+</div>
+
+
+
+<div class="status">
+
+{{ $cumplimiento }}%
+
+Documentación
+
+</div>
+
+
+
+<div class="url">
+
+{{ $url }}
+
+</div>
+
+
+
+</div>
+
+
+</body>
+
+</html>
