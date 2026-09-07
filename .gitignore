@@ -4,15 +4,23 @@
 # Laravel
 src/vendor/
 src/node_modules/
+
 src/storage/logs/*
 src/storage/framework/cache/*
 src/storage/framework/sessions/*
 src/storage/framework/views/*
+
 src/bootstrap/cache/*.php
 
-# Environment
+# Variables de entorno
 src/.env
 src/.env.*
+
+# Build de Vite
+src/public/build/
+
+# Respaldos locales
+src/.rbac-backup-*/
 
 # IDE
 .vscode/
