@@ -1,0 +1,17 @@
+{
+  "appId": "cl.fjpb.sgdv",
+  "appName": "SGDV",
+  "webDir": "src/public",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://fjpb.cl/SGDV",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#0f172a",
+      "showSpinner": false
+    }
+  }
+}
