@@ -366,15 +366,67 @@ body{
 
     color:white;
 
-    padding:8px 14px;
+    padding:10px 18px;
 
     border-radius:12px;
 
     text-decoration:none;
 
-    font-size:13px;
+    font-size:14px;
+
+    font-weight:600;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    min-height:44px;
+
+    touch-action:manipulation;
 
 }
+
+@media (max-width: 480px) {
+
+    body {
+        padding:10px;
+    }
+
+    .sgdv-card {
+        padding:18px 14px;
+        border-radius:20px;
+    }
+
+    .vehicle h2 {
+        font-size:20px;
+    }
+
+    .plate {
+        font-size:16px;
+        padding:6px 14px;
+    }
+
+    .document {
+        padding:12px;
+        flex-direction:row;
+        gap:8px;
+    }
+
+    .document-name {
+        font-size:14px;
+    }
+
+    .status-compact .percent {
+        font-size:20px;
+    }
+
+}
+
+</style>
 
 
 

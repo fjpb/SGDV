@@ -1,7 +1,7 @@
 <aside class="navbar navbar-vertical navbar-expand-lg">
 <div class="container-fluid flex-column">
 
-<div class="navbar-brand mb-4 sgdv-brand">
+<div class="navbar-brand mb-4 sgdv-brand d-none d-lg-flex">
 
 <div class="d-flex flex-column">
 
@@ -20,7 +20,8 @@ Sistema Gestión Documental Vehicular
 
 </div>
 
-<div class="navbar-nav flex-column w-100">
+<div class="collapse navbar-collapse w-100" id="sidebar-menu">
+<div class="navbar-nav flex-column w-100 py-2">
 
 <div class="text-secondary small mb-2">
 GENERAL
@@ -104,6 +105,7 @@ href="{{ route('profile.edit') }}">
 Mi Perfil
 </a>
 
+</div>
 </div>
 
 </div>
