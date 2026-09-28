@@ -327,6 +327,7 @@ Comandos destructivos (migrate:fresh, down -v, rm -rf, DROP, TRUNCATE): pedir co
 No agregar paquetes Composer/npm sin justificarlo (peso, mantenimiento y compatibilidad con el hosting).
 Cambios pequeños y revisables, indicando qué archivos se tocan y por qué.
 Si algo no está claro (requisitos, esquema, versión de Laravel), preguntar antes de asumir.
+Actualizar y sincronizar siempre Git (`git commit` y `git push`) al finalizar cada conjunto de tareas o cambios para mantener el repositorio remoto en la última versión.
 Convenciones
 PHP: PSR-12; clases PascalCase, métodos/variables camelCase; tablas en plural snake_case.
 Commits: Conventional Commits (feat:, fix:, docs:, chore:).
@@ -370,3 +371,4 @@ Observaciones al revisar el repositorio (marcar al resolver):
  Producción: config:cache, route:cache, view:cache
  Este documento refleja los cambios realizados
  Por ultimos siempre guardar lo necesario para entender los cambios en historia.md
+ Sincronizar y actualizar siempre Git (`git commit` y `git push origin main`) para tener la última versión en el repositorio remoto.
