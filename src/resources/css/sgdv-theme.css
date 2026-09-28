@@ -360,10 +360,11 @@ body {
 
 /*
 |--------------------------------------------------------------------------
-| SGDV Fixed Sidebar Layout (Desktop & Mobile Responsive)
+| SGDV Fixed Sidebar & Mobile Navigation Layout
 |--------------------------------------------------------------------------
 */
 
+/* Desktop Sidebar Layout (≥992px) */
 @media (min-width: 992px) {
     .navbar-vertical {
         position: fixed !important;
@@ -373,6 +374,13 @@ body {
         width: 240px !important;
         z-index: 1030;
         overflow-y: auto;
+        display: flex !important;
+    }
+
+    .navbar-vertical .navbar-collapse {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
     }
 
     .page-wrapper {
@@ -381,6 +389,7 @@ body {
     }
 }
 
+/* Mobile Navigation Layout (<992px) */
 @media (max-width: 991.98px) {
     .page-wrapper {
         margin-left: 0 !important;
@@ -388,12 +397,20 @@ body {
     }
 
     .navbar-vertical {
+        position: relative !important;
+        width: 100% !important;
         background: var(--sgdv-dark) !important;
     }
 
-    .navbar-vertical .navbar-collapse {
+    .navbar-vertical .navbar-collapse.collapse:not(.show) {
+        display: none !important;
+    }
+
+    .navbar-vertical .navbar-collapse.collapse.show {
+        display: flex !important;
+        flex-direction: column;
+        padding: 12px 16px 20px;
         background: var(--sgdv-dark);
-        padding: 10px 16px 20px;
     }
 }
 

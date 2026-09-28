@@ -1,4 +1,4 @@
-<aside class="navbar navbar-vertical navbar-expand-lg">
+<aside class="navbar navbar-vertical navbar-expand-lg sgdv-sidebar">
 <div class="container-fluid flex-column">
 
 <!-- Brand Header -->
@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<!-- Collapsible Navigation for Mobile / Fixed on Desktop -->
+<!-- Collapsible Navigation -->
 <div class="collapse navbar-collapse w-100" id="sidebar-menu">
     <div class="navbar-nav flex-column w-100 py-2">
 
