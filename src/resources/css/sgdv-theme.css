@@ -360,7 +360,7 @@ body {
 
 /*
 |--------------------------------------------------------------------------
-| SGDV Fixed Sidebar Layout (Desktop & Mobile Drawer)
+| SGDV Fixed Sidebar Layout (Desktop & Mobile Responsive)
 |--------------------------------------------------------------------------
 */
 
@@ -373,11 +373,10 @@ body {
         width: 240px !important;
         z-index: 1030;
         overflow-y: auto;
-        display: flex !important;
     }
 
     .page-wrapper {
-        margin-left: var(--tblr-navbar-vertical-width, 240px) !important;
+        margin-left: 240px !important;
         width: calc(100% - 240px) !important;
     }
 }
@@ -389,24 +388,12 @@ body {
     }
 
     .navbar-vertical {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 280px !important;
-        max-width: 85vw;
-        z-index: 1060;
         background: var(--sgdv-dark) !important;
-        transform: translateX(-100%) !important;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4);
-        overflow-y: auto;
     }
 
-    .navbar-vertical.show,
-    .navbar-vertical.collapsing:not([style*="height: 0px"]) {
-        transform: translateX(0) !important;
-        display: block !important;
+    .navbar-vertical .navbar-collapse {
+        background: var(--sgdv-dark);
+        padding: 10px 16px 20px;
     }
 }
 
