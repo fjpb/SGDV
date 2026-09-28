@@ -4,10 +4,10 @@
 
 ### 📱 Mejoras de Navegación y Vistas Móviles
 - **Barra Lateral y Header (`navbar.blade.php`, `sidebar.blade.php`)**:
-  - Incorporación del botón de menú hamburguesa colapsable (`navbar-toggler`) para teléfonos inteligentes.
-  - Encapsulación de la navegación lateral en contenedor `.collapse.navbar-collapse` desplegable en pantallas < 992px.
-  - Ajuste de `position: fixed` de la barra lateral en `sgdv-theme.css` para aplicar exclusivamente en escritorio (≥992px), eliminando el desplazamiento horizontal en smartphones.
-  - Dimensionamiento de botones e ítems de menú con áreas de toque táctil optimizadas (mínimo 44px de alto).
+  - Implementación del sistema nativo **Offcanvas Drawer (`offcanvas-lg offcanvas-start`)** de Bootstrap 5 & Tabler UI para el menú móvil.
+  - En móviles (<992px), el botón hamburguesa `☰` despliega un cajón lateral fluido desde la izquierda con encabezado dedicado y botón de cierre `✕`.
+  - En escritorio (≥992px), la barra lateral se fija de forma permanente a la izquierda (240px) manteniendo todos sus enlaces e iconos 100% visibles.
+  - Dimensionamiento de botones e ítems de menú con áreas táctiles optimizadas (mínimo 44px de alto).
 - **Listado de Vehículos (`vehicles/index.blade.php`)**:
   - Implementación de vista de tarjetas responsive (`d-md-none`) para navegación táctil fluida en teléfonos móviles, conservando la tabla clásica en computadores (`d-none d-md-block`).
 - **Ficha y Detalle de Vehículo (`vehicles/show.blade.php`)**:
