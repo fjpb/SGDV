@@ -2,12 +2,16 @@
 
 ## [2026-09-28] — Optimización Móvil y Responsive UX/UI
 
-### 📱 Mejoras de Navegación Móvil
+### 📱 Mejoras de Navegación y Vistas Móviles
 - **Barra Lateral y Header (`navbar.blade.php`, `sidebar.blade.php`)**:
   - Incorporación del botón de menú hamburguesa colapsable (`navbar-toggler`) para teléfonos inteligentes.
   - Encapsulación de la navegación lateral en contenedor `.collapse.navbar-collapse` desplegable en pantallas < 992px.
   - Ajuste de `position: fixed` de la barra lateral en `sgdv-theme.css` para aplicar exclusivamente en escritorio (≥992px), eliminando el desplazamiento horizontal en smartphones.
   - Dimensionamiento de botones e ítems de menú con áreas de toque táctil optimizadas (mínimo 44px de alto).
+- **Listado de Vehículos (`vehicles/index.blade.php`)**:
+  - Implementación de vista de tarjetas responsive (`d-md-none`) para navegación táctil fluida en teléfonos móviles, conservando la tabla clásica en computadores (`d-none d-md-block`).
+- **Ficha y Detalle de Vehículo (`vehicles/show.blade.php`)**:
+  - Adaptación de la barra de acciones superior para envolver botones de forma táctil y accesible en pantallas pequeñas.
 
 ### 🔍 Optimización del Visor Público e Inspector QR
 - **Ficha Vehicular Pública (`public/vehicle.blade.php`)**:

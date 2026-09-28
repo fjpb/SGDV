@@ -37,43 +37,39 @@
             </div>
 
 
-            <div class="col-auto">
+            <div class="col-12 col-md-auto ms-md-auto mt-2 mt-md-0">
 
-                <div class="btn-list">
+                <div class="btn-list flex-wrap">
 
 
                     <a href="{{ route('vehicles.edit',$vehicle) }}"
-                       class="btn btn-outline-primary">
+                       class="btn btn-outline-primary flex-fill flex-md-grow-0">
 
-                        Editar
+                        <i class="ti ti-edit me-1"></i> Editar
 
                     </a>
 
 
                     <a href="{{ route('vehicles.qr',$vehicle) }}"
-                       class="btn btn-outline-success">
+                       class="btn btn-outline-success flex-fill flex-md-grow-0">
 
-                        <i class="fa fa-qrcode me-1"></i>
-
-                        QR Público
+                        <i class="fa fa-qrcode me-1"></i> QR Público
 
                     </a>
 
 
                     <a href="{{ route('vehicles.card',$vehicle) }}"
-                       class="btn btn-outline-success">
+                       class="btn btn-outline-success flex-fill flex-md-grow-0">
 
-                        <i class="fa fa-id-card me-1"></i>
-
-                        Tarjeta QR
+                        <i class="fa fa-id-card me-1"></i> Tarjeta QR
 
                     </a>
 
 
                     <a href="{{ route('documents.create') }}"
-                       class="btn btn-primary">
+                       class="btn btn-primary flex-fill flex-md-grow-0">
 
-                        Agregar documento
+                        <i class="ti ti-plus me-1"></i> Agregar documento
 
                     </a>
 
