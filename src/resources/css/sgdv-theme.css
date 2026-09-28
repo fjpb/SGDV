@@ -360,7 +360,7 @@ body {
 
 /*
 |--------------------------------------------------------------------------
-| SGDV Sidebar & Mobile Navigation Layout Rules
+| SGDV Sidebar & Offcanvas Layout Rules
 |--------------------------------------------------------------------------
 */
 
@@ -394,35 +394,17 @@ body {
     }
 }
 
-/* Mobile Navigation Layout (<992px) */
+/* Mobile Offcanvas Drawer (<992px) */
 @media (max-width: 991.98px) {
     .page-wrapper {
         margin-left: 0 !important;
         width: 100% !important;
     }
 
-    .navbar-vertical {
-        position: fixed !important;
-        top: 64px;
-        left: 0;
-        right: 0;
-        width: 100% !important;
-        max-height: calc(100vh - 64px);
-        z-index: 1050;
+    .navbar-vertical.offcanvas-lg {
         background: var(--sgdv-dark) !important;
-        overflow-y: auto;
-        display: none !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .navbar-vertical.show {
-        display: flex !important;
-        flex-direction: column;
-        padding: 16px 20px 24px;
-    }
-
-    .navbar-vertical .sgdv-brand {
-        display: none !important;
+        width: 280px !important;
+        max-width: 85vw;
     }
 }
 
