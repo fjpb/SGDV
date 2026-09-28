@@ -360,38 +360,53 @@ body {
 
 /*
 |--------------------------------------------------------------------------
-| SGDV Fixed Sidebar Layout (Desktop & Mobile Responsive)
+| SGDV Fixed Sidebar Layout (Desktop & Mobile Drawer)
 |--------------------------------------------------------------------------
 */
 
 @media (min-width: 992px) {
     .navbar-vertical {
-        position: fixed;
+        position: fixed !important;
         top: 0;
         bottom: 0;
         left: 0;
+        width: 240px !important;
         z-index: 1030;
         overflow-y: auto;
+        display: flex !important;
     }
 
     .page-wrapper {
-        margin-left: var(--tblr-navbar-vertical-width, 240px);
+        margin-left: var(--tblr-navbar-vertical-width, 240px) !important;
+        width: calc(100% - 240px) !important;
     }
 }
 
 @media (max-width: 991.98px) {
     .page-wrapper {
         margin-left: 0 !important;
+        width: 100% !important;
     }
 
     .navbar-vertical {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px !important;
+        max-width: 85vw;
+        z-index: 1060;
+        background: var(--sgdv-dark) !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4);
+        overflow-y: auto;
     }
 
-    .navbar-vertical .navbar-collapse {
-        padding: 12px 16px 20px;
-        background: var(--sgdv-dark);
-        border-radius: 0 0 16px 16px;
+    .navbar-vertical.show,
+    .navbar-vertical.collapsing:not([style*="height: 0px"]) {
+        transform: translateX(0) !important;
+        display: block !important;
     }
 }
 

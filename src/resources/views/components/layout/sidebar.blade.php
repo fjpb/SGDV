@@ -1,6 +1,16 @@
-<aside class="navbar navbar-vertical navbar-expand-lg">
-<div class="container-fluid flex-column">
+<aside class="navbar navbar-vertical navbar-expand-lg collapse navbar-collapse sgdv-sidebar" id="sidebar-menu">
+<div class="container-fluid flex-column p-0 p-lg-2">
 
+<!-- Mobile Header inside Drawer -->
+<div class="d-flex d-lg-none align-items-center justify-content-between w-100 p-3 border-bottom border-secondary border-opacity-25">
+    <div class="d-flex align-items-center gap-2">
+        <i class="ti ti-car text-success fs-2"></i>
+        <span class="fw-bold fs-2 text-white">SGDV</span>
+    </div>
+    <button type="button" class="btn-close btn-close-white" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-label="Cerrar"></button>
+</div>
+
+<!-- Desktop Brand Header -->
 <div class="navbar-brand mb-4 sgdv-brand d-none d-lg-flex">
 
 <div class="d-flex flex-column">
@@ -20,8 +30,8 @@ Sistema Gestión Documental Vehicular
 
 </div>
 
-<div class="collapse navbar-collapse w-100" id="sidebar-menu">
-<div class="navbar-nav flex-column w-100 py-2">
+<!-- Navigation List -->
+<div class="navbar-nav flex-column w-100 px-3 py-2">
 
 <div class="text-secondary small mb-2">
 GENERAL
@@ -105,7 +115,6 @@ href="{{ route('profile.edit') }}">
 Mi Perfil
 </a>
 
-</div>
 </div>
 
 </div>
