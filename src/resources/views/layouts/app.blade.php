@@ -107,6 +107,29 @@ data-bs-dismiss="alert">
 </div>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toggler = document.querySelector('.navbar-toggler');
+    const sidebar = document.getElementById('sgdv-sidebar');
+
+    if (toggler && sidebar) {
+        toggler.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            sidebar.classList.toggle('show');
+        });
+
+        sidebar.querySelectorAll('.nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth < 992) {
+                    sidebar.classList.remove('show');
+                }
+            });
+        });
+    }
+});
+</script>
+
 </body>
 
 </html>

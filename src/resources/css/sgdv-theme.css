@@ -402,17 +402,27 @@ body {
     }
 
     .navbar-vertical {
-        position: relative !important;
+        position: fixed !important;
+        top: 64px;
+        left: 0;
+        right: 0;
         width: 100% !important;
+        max-height: calc(100vh - 64px);
+        z-index: 1050;
         background: var(--sgdv-dark) !important;
+        overflow-y: auto;
         display: none !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
-    .navbar-vertical.show,
-    .navbar-vertical.collapsing {
+    .navbar-vertical.show {
         display: flex !important;
         flex-direction: column;
-        padding: 12px 16px 20px;
+        padding: 16px 20px 24px;
+    }
+
+    .navbar-vertical .sgdv-brand {
+        display: none !important;
     }
 }
 
